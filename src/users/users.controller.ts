@@ -1,4 +1,4 @@
-import {Controller, Post, Get, Body, Param, Put, UseInterceptors, HttpException, ClassSerializerInterceptor} from '@nestjs/common';
+import {Controller, Post, Get, Body, Param, Put, HttpException} from '@nestjs/common';
 import {UsersService} from './users.service';
 import {UpdateUserDto} from './dto/user.dto';
 import {IUser} from './interfaces/user.interface';
@@ -8,6 +8,12 @@ import {UserDTO} from './dto/user.dto';
 @Controller('users')
 export class UsersController {
     constructor(private readonly usersService: UsersService) { }
+
+    @Get()
+    @ApiResponse({ status: 200, description: 'List of Users' })
+    async getAll(): Promise<IUser[]> {
+        return await this.usersService.getAllFromDB();
+    }
 
     @Put(':id')
     @ApiImplicitParam({ name: 'id', type: Number })
