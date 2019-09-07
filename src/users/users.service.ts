@@ -11,9 +11,18 @@ export class UsersService {
         private readonly userRepository: Repository<User>,
     ) { }
 
+    async deleteUserById(id: number): Promise<IUser> {
+      const user = await this.userRepository.findOne(id);
+      if (!user) {
+            throw new HttpException('Not found', HttpStatus.NOT_FOUND);
+        }
+      return await this.userRepository.remove(user);
+    }
+
     async getAllFromDB(): Promise<IUser[]> {
         return await this.userRepository.find();
     }
+
     async updateUser(id: number, data: UpdateUserDto ): Promise<IUser> {
         const user = await this.userRepository.findOne(id);
         if (!user) {

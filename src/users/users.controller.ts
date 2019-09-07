@@ -1,4 +1,4 @@
-import {Controller, Post, Get, Body, Param, Put, HttpException} from '@nestjs/common';
+import {Controller, Post, Get, Body, Param, Delete, Put, HttpException} from '@nestjs/common';
 import {UsersService} from './users.service';
 import {UpdateUserDto} from './dto/user.dto';
 import {IUser} from './interfaces/user.interface';
@@ -8,6 +8,14 @@ import {UserDTO} from './dto/user.dto';
 @Controller('users')
 export class UsersController {
     constructor(private readonly usersService: UsersService) { }
+
+    @Delete(':id')
+    @ApiImplicitParam({ name: 'id', type: Number })
+    @ApiResponse({ status: 200, description: 'User Object ```deleted User()```' })
+    @ApiResponse({ status: 404, description: 'Error Exception ```{ statusCode: 404, message: "Not found" }```' })
+    deleteUserById(@Param() params): Promise<IUser> {
+        return this.usersService.deleteUserById(params.id);
+    }
 
     @Get()
     @ApiResponse({ status: 200, description: 'List of Users' })
