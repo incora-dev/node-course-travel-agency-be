@@ -11,7 +11,7 @@ export class UsersController {
     @ApiImplicitParam({ name: 'id', type: Number })
     @ApiResponse({ status: 200, description: 'User Object'})
     @ApiResponse({ status: 404, description: 'Error Exception ```{ statusCode: 404, message: "Not found" }```' })
-    getOneById(@Param() params): Promise<IUser> {
-        return this.usersService.getOneById(params.id);
+    getOneById(@Param('id') id: number): Promise<IUser> {
+        return this.usersService.getOneByParams({ id });
     }
 }

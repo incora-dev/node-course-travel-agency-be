@@ -10,8 +10,8 @@ export class UsersService {
         private readonly userRepository: Repository<User>,
     ) {}
 
-    async getOneById(id: number): Promise<IUser> {
-        const user = await this.userRepository.findOne(id);
+    async getOneByParams(params: object): Promise<IUser> {
+        const user = await this.userRepository.findOne(params);
         if (!user) {
             throw new HttpException('Not found', HttpStatus.NOT_FOUND);
         }
