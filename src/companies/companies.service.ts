@@ -22,4 +22,8 @@ export class CompaniesService {
     async getAll(): Promise<ICompany[]> {
         return await this.companyRepository.find();
     }
+
+    async deleteCompanyById(id: number): Promise<ICompany> {
+        return await this.companyRepository.remove( await this.companyRepository.findOne(id));
+    }
 }
