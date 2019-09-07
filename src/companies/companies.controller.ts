@@ -28,4 +28,11 @@ export class CompaniesController {
     getOneById(@Param('id') id: number): Promise<ICompany> {
         return this.companiesService.getOneByParams({ id });
     }
+
+    @Get()
+    @ApiResponse({ status: 200, description: 'List of Companies'})
+    getAll(): Promise<ICompany[]> {
+        return this.companiesService.getAll();
+    }
+
 }

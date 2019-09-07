@@ -18,4 +18,8 @@ export class CompaniesService {
     async getOneByParams(params: object): Promise<ICompany> {
         return await this.companyRepository.findOne(params);
     }
+
+    async getAll(): Promise<ICompany[]> {
+        return await this.companyRepository.find();
+    }
 }
