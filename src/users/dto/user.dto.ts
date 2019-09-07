@@ -17,5 +17,16 @@ export class UpdateUserDto {
     @IsNotEmpty()
     @ApiModelProperty()
     readonly email: string;
+}
 
+export class UserDTO {
+
+    @ApiModelProperty()
+    readonly email: string;
+
+    @ApiModelProperty()
+    readonly firstName: string;
+
+    @ApiModelProperty()
+    readonly lastName: string;
 }
