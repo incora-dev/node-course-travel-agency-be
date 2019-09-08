@@ -1,4 +1,4 @@
-import {Controller, Get, Param, Post, Body} from '@nestjs/common';
+import {Controller, Get, Param, Post, Body, Delete} from '@nestjs/common';
 import {ApiUseTags, ApiImplicitParam, ApiResponse} from '@nestjs/swagger';
 import {ToursService} from './tours.service';
 import {ITour} from './interface/tour.interface';
@@ -28,5 +28,13 @@ export class ToursController {
     @ApiResponse({ status: 200, description: 'Success ```List of Tours```'})
     getAll(): Promise<ITour[]> {
         return this.toursService.getAll();
+    }
+
+    @Delete(':id')
+    @ApiImplicitParam({ name: 'id', type: Number })
+    @ApiResponse({ status: 200, description: 'Tour has been successfully deleted ```deleted Tour()```' })
+    @ApiResponse({ status: 404, description: 'Error Exception ```{ statusCode: 404, message: "Not found" }```' })
+    deleteById(@Param() params): Promise<ITour> {
+        return this.toursService.deleteById(params.id);
     }
 }
