@@ -1,7 +1,7 @@
-import {Body, Controller, Delete, Get, HttpException, HttpStatus, Param, Post} from '@nestjs/common';
+import {Body, Controller, Delete, Get, HttpException, HttpStatus, Param, Post, Put} from '@nestjs/common';
 import {CompaniesService} from './companies.service';
 import {ApiResponse, ApiImplicitParam, ApiUseTags} from '@nestjs/swagger';
-import {CreateCompanyDto} from './dto/company.dto';
+import {CreateCompanyDto, UpdateCompanyDto} from './dto/company.dto';
 import {ICompany} from './interface/company.interface';
 
 @ApiUseTags('companies')
@@ -41,6 +41,14 @@ export class CompaniesController {
     @ApiResponse({ status: 404, description: 'Error Exception ```{ statusCode: 404, message: "Not found" }```' })
     deleteCompanyById(@Param() params): Promise<ICompany> {
         return this.companiesService.deleteCompanyById(params.id);
+    }
+
+    @Put(':id')
+    @ApiImplicitParam({ name: 'id', type: Number })
+    @ApiResponse({ status: 200, description: 'Company Object ```updated Company()```' })
+    @ApiResponse({ status: 404, description: 'Error Exception ```{ statusCode: 404, message: "Not found" }```' })
+    updateCompany(@Param() params, @Body() user: UpdateCompanyDto): Promise<ICompany> {
+        return this.companiesService.updateCompany(params.id, user);
     }
 
 }
