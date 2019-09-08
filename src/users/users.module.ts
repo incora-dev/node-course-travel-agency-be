@@ -9,6 +9,7 @@ import {UserIsExistMiddleware} from '../middlewares/user.isExist.middleware';
   imports: [DatabaseModule],
   controllers: [UsersController],
   providers: [...userProviders, UsersService],
+  exports: [UsersService],
 })
 export class UsersModule implements NestModule {
     configure(consumer: MiddlewareConsumer) {

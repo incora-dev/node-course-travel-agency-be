@@ -1,4 +1,6 @@
-import {Controller, Post, Get, Body, Param, Delete, Put, HttpException} from '@nestjs/common';
+import {Controller, Post, Get, Body, Param, Delete, Put, HttpException, UseGuards} from '@nestjs/common';
+import {AuthGuard} from '@nestjs/passport';
+import {RoleGuard} from '../auth/guards/role.guard';
 import {UsersService} from './users.service';
 import {UpdateUserDto} from './dto/user.dto';
 import {IUser} from './interfaces/user.interface';
@@ -9,6 +11,7 @@ import {UserDTO} from './dto/user.dto';
 export class UsersController {
     constructor(private readonly usersService: UsersService) { }
 
+    @UseGuards(AuthGuard('jwt'), RoleGuard)
     @Delete(':id')
     @ApiImplicitParam({ name: 'id', type: Number })
     @ApiResponse({ status: 200, description: 'User Object ```deleted User()```' })
@@ -23,6 +26,7 @@ export class UsersController {
         return await this.usersService.getAllFromDB();
     }
 
+    @UseGuards(AuthGuard('jwt'), RoleGuard)
     @Put(':id')
     @ApiImplicitParam({ name: 'id', type: Number })
     @ApiResponse({ status: 200, description: 'User Object ```new User()```' })
@@ -43,11 +47,6 @@ export class UsersController {
     @ApiResponse({ status: 201, description: 'The User has been successfully added.' })
     @ApiResponse({ status: 404, description: 'Error Exception ```{ statusCode: 400, message: "User exists!" }```' })
     async add(@Body() user: UserDTO): Promise<IUser> {
-        const email = user.email;
-        const userFromDB = await this.usersService.getOneByParams({ email });
-        if (userFromDB) {
-            throw new HttpException('User exists!', 400);
-        }
         return await this.usersService.addToDB(user);
     }
 }
