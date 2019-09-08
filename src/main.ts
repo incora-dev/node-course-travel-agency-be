@@ -11,6 +11,7 @@ async function bootstrap() {
       .setTitle('Travel agency API')
       .setVersion('1.0')
       .addTag('users')
+      .addBearerAuth('Authorization', 'header')
       .build();
   const document = SwaggerModule.createDocument(app, options);
   SwaggerModule.setup('api', app, document);

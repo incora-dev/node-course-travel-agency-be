@@ -53,7 +53,7 @@ export class UserDTO {
     readonly password: string;
 
     @IsNotEmpty()
-    @ApiModelProperty()
+    @ApiModelProperty({ enum: ['ADMIN', 'USER'] })
     readonly role: UserRole;
 }
 
