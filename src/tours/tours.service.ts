@@ -2,7 +2,7 @@ import {Inject, Injectable} from '@nestjs/common';
 import {Repository} from 'typeorm';
 import {Tour} from './tour.entity';
 import {ITour} from './interface/tour.interface';
-import {CreateTourDto} from './dto/tour.dto';
+import {CreateTourDto, UpdateTourDto} from './dto/tour.dto';
 
 @Injectable()
 export class ToursService {
@@ -25,5 +25,9 @@ export class ToursService {
 
     async deleteById(id: number): Promise<ITour> {
         return await this.tourRepository.remove( await this.tourRepository.findOne(id));
+    }
+
+    async update(id: number, data: UpdateTourDto ): Promise<ITour> {
+        return await this.tourRepository.save({ ...data, id: Number(id) });
     }
 }
