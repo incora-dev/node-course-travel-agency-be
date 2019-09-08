@@ -1,6 +1,6 @@
 import {HttpException, HttpStatus, Injectable, NestMiddleware} from '@nestjs/common';
 import { Request, Response } from 'express';
-import {UsersService} from '../users/users.service';
+import {UsersService} from 'src/users/users.service';
 
 @Injectable()
 export class UserIsExistMiddleware implements NestMiddleware {
