@@ -1,8 +1,9 @@
-import {Injectable, Inject, HttpException, HttpStatus} from '@nestjs/common';
+import {Injectable, Inject, HttpException} from '@nestjs/common';
 import {Repository} from 'typeorm';
 import {User} from './user.entity';
 import {IUser} from './interfaces/user.interface';
 import {UpdateUserDto, UserDTO} from './dto/user.dto';
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class UsersService {
@@ -12,11 +13,7 @@ export class UsersService {
     ) { }
 
     async deleteUserById(id: number): Promise<IUser> {
-      const user = await this.userRepository.findOne(id);
-      if (!user) {
-            throw new HttpException('Not found', HttpStatus.NOT_FOUND);
-        }
-      return await this.userRepository.remove(user);
+      return await this.userRepository.remove( await this.userRepository.findOne(id) );
     }
 
     async getAllFromDB(): Promise<IUser[]> {
@@ -24,22 +21,23 @@ export class UsersService {
     }
 
     async updateUser(id: number, data: UpdateUserDto ): Promise<IUser> {
-        const user = await this.userRepository.findOne(id);
-        if (!user) {
-            throw new HttpException('Not found', HttpStatus.NOT_FOUND);
+        if (data.password) {
+            data.password = await bcrypt.hash(data.password, 10);
         }
         return await this.userRepository.save({ ...data, id: Number(id) });
     }
 
     async addToDB(user: UserDTO): Promise<IUser> {
-        return await this.userRepository.save(user);
+        const email = user.email;
+        const userFromDB = await this.getOneByParams({ email });
+        if (userFromDB) {
+            throw new HttpException('User exists!', 400);
+        }
+        const entity = Object.assign(new User(), user);
+        return await this.userRepository.save(entity);
     }
 
     async getOneByParams(params: object): Promise<IUser> {
-        const user = await this.userRepository.findOne(params);
-        if (!user) {
-            throw new HttpException('Not found', HttpStatus.NOT_FOUND);
-        }
-        return user;
+        return await this.userRepository.findOne(params);
     }
 }
