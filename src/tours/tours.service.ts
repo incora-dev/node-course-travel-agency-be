@@ -18,4 +18,8 @@ export class ToursService {
     async createTour(tour: CreateTourDto): Promise<ITour> {
         return await this.tourRepository.save(tour);
     }
+
+    async getAll(): Promise<ITour[]> {
+        return await this.tourRepository.find();
+    }
 }

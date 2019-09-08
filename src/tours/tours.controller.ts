@@ -23,4 +23,10 @@ export class ToursController {
     async create(@Body() tour: CreateTourDto): Promise<ITour> {
         return await this.toursService.createTour(tour);
     }
+
+    @Get()
+    @ApiResponse({ status: 200, description: 'Success ```List of Tours```'})
+    getAll(): Promise<ITour[]> {
+        return this.toursService.getAll();
+    }
 }
