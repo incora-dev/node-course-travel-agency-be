@@ -1,7 +1,7 @@
 import { IsNotEmpty, IsString, IsPhoneNumber, IsOptional, IsNumber, Min, Max } from 'class-validator';
 import { ApiModelProperty } from '@nestjs/swagger';
 
-export class HotelDTO{
+export class HotelDTO {
     @IsString()
     @IsNotEmpty()
     @ApiModelProperty()
@@ -24,7 +24,7 @@ export class HotelDTO{
 
 }
 
-export class UpdateHotelDTO{
+export class UpdateHotelDTO {
     @IsOptional()
     @IsString()
     @IsNotEmpty()

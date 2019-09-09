@@ -6,9 +6,9 @@ import { DatabaseModule } from '../core/database.module';
 import { HotelIsExistMiddleware } from '../middlewares/hotel.isExist.middleware';
 
 @Module({
-  imports:[DatabaseModule],
+  imports: [DatabaseModule],
   controllers: [HotelController],
-  providers: [HotelService, ...hotelProviders]
+  providers: [HotelService, ...hotelProviders],
 })
 export class HotelModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {

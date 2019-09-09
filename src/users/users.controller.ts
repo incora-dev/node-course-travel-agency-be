@@ -9,7 +9,7 @@ import {UserDTO, UpdateUserDTO} from './dto/user.dto';
 @Controller('users')
 export class UsersController {
     constructor(private readonly usersService: UsersService) { }
-    
+
     @ApiBearerAuth()
     @UseGuards(AuthGuard('jwt'), RoleGuard)
     @ApiImplicitParam({ name: 'id', type: Number })

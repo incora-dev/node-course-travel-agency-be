@@ -6,19 +6,19 @@ import { HotelDTO, UpdateHotelDTO } from './dto/hotel.dto';
 
 @Injectable()
 export class HotelService {
-    constructor(@Inject('HOTEL_REPOSITORY') 
-        private readonly hotelRepository: Repository<Hotel>
-    ){}
+    constructor(@Inject('HOTEL_REPOSITORY')
+        private readonly hotelRepository: Repository<Hotel>,
+    ) {}
 
     async getAll(): Promise<IHotel[]> {
         return await this.hotelRepository.find();
     }
 
-    async getOneByParams(params: object): Promise<IHotel>{
+    async getOneByParams(params: object): Promise<IHotel> {
         return await this.hotelRepository.findOne(params);
     }
 
-    async create(hotel: HotelDTO): Promise<IHotel>{
+    async create(hotel: HotelDTO): Promise<IHotel> {
         const name = hotel.name;
         const hotelFromDB = await this.getOneByParams({name});
         if (hotelFromDB) {
@@ -26,12 +26,12 @@ export class HotelService {
         }
         return await this.hotelRepository.save(hotel);
     }
-    async update(id: number, hotel: UpdateHotelDTO): Promise<IHotel>{
+    async update(id: number, hotel: UpdateHotelDTO): Promise<IHotel> {
         return await this.hotelRepository.save({...hotel, id: Number(id)});
     }
-    async delete(id: number): Promise<IHotel>{
+    async delete(id: number): Promise<IHotel> {
         const userToRemove = await this.hotelRepository.findOne(id);
         return await this.hotelRepository.remove(userToRemove);
     }
-    
+
 }

@@ -16,7 +16,7 @@ async function bootstrap() {
       .addBearerAuth('Authorization', 'header')
       .build();
   const documentUsers = SwaggerModule.createDocument(app, optionsUsers, {
-    include: [UsersModule]
+    include: [UsersModule],
   });
   SwaggerModule.setup('api/users', app, documentUsers);
 
@@ -27,10 +27,9 @@ async function bootstrap() {
     .addBearerAuth('Authorization', 'header')
     .build();
   const documentHotel = SwaggerModule.createDocument(app, optionsHotel, {
-    include: [HotelModule]
+    include: [HotelModule],
   });
   SwaggerModule.setup('api/hotel', app, documentHotel);
-
 
   app.useGlobalPipes(new ValidationPipe());
   await app.listen(3000);
