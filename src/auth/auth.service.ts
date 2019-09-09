@@ -1,9 +1,10 @@
 import * as bcrypt from 'bcrypt';
-import { Injectable, HttpException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { UsersService } from '../users/users.service';
 import { UserLogin, UserDTO } from '../users/dto/user.dto';
 import { IUser } from '../users/interfaces/user.interface';
+import { IPlayload } from './interfaces/playload.interface';
 
 @Injectable()
 export class AuthService {
@@ -17,12 +18,12 @@ export class AuthService {
         return await this.usersService.getOneByParams({ email });
     }
 
-    async register(newUser: UserDTO) {
+    async register(newUser: UserDTO): Promise<IUser> {
         return await this.usersService.addToDB(newUser);
     }
 
     /*--- Local validation ----- */
-    async validate(userData: UserLogin): Promise<any> {
+    async validate(userData: UserLogin): Promise<boolean> {
         const email = userData.email;
         const user = await this.usersService.getOneByParams({ email });
         if (user) {
@@ -32,7 +33,7 @@ export class AuthService {
     }
 
     /*--- Jwt sign (generates token) ---*/
-    async login(user: any) {
+    async login(user: any): Promise<IPlayload> {
         const payload = { role: user.role, email: user.email, id: user.id };
         return {
             access_token: this.jwtService.sign(payload),
