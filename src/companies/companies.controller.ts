@@ -11,6 +11,7 @@ export class CompaniesController {
 
     @Post()
     @ApiResponse({ status: 201, description: 'Company has been successfully created.' })
+    @ApiResponse({ status: 400, description: 'Error Exception ```{ statusCode: 400, message: "Bad request" }```' })
     @ApiResponse({ status: 409, description: 'Error Exception ```{ statusCode: 409, message: "Company already exists!" }```' })
     async create(@Body() company: CreateCompanyDto): Promise<ICompany> {
         const contactEmail = company.contactEmail;
@@ -46,9 +47,10 @@ export class CompaniesController {
     @Put(':id')
     @ApiImplicitParam({ name: 'id', type: Number })
     @ApiResponse({ status: 200, description: 'Company Object ```updated Company()```' })
+    @ApiResponse({ status: 400, description: 'Error Exception ```{ statusCode: 400, message: "Bad request" }```' })
     @ApiResponse({ status: 404, description: 'Error Exception ```{ statusCode: 404, message: "Not found" }```' })
-    updateCompany(@Param() params, @Body() user: UpdateCompanyDto): Promise<ICompany> {
-        return this.companiesService.updateCompany(params.id, user);
+    updateCompany(@Param() params, @Body() company: UpdateCompanyDto): Promise<ICompany> {
+        return this.companiesService.updateCompany(params.id, company);
     }
 
 }

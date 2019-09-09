@@ -48,25 +48,25 @@ export class UpdateCompanyDto {
 
     @IsString()
     @MinLength(3)
-    @IsNotEmpty()
+    @IsOptional()
     @ApiModelProperty()
     readonly name: string;
 
     @IsString()
     @MinLength(5)
-    @IsNotEmpty()
+    @IsOptional()
     @ApiModelProperty()
     readonly city: string;
 
     @IsString()
     @MinLength(5)
-    @IsNotEmpty()
+    @IsOptional()
     @ApiModelProperty()
     readonly state: string;
 
     @IsString()
     @MinLength(5)
-    @IsNotEmpty()
+    @IsOptional()
     @ApiModelProperty()
     readonly address1: string;
 
@@ -77,7 +77,7 @@ export class UpdateCompanyDto {
 
     @IsString()
     @MinLength(3)
-    @IsNotEmpty()
+    @IsOptional()
     @ApiModelProperty()
     readonly zip: string;
 
