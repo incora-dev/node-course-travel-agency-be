@@ -9,27 +9,17 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.enableCors();
 
-  const optionsUsers = new DocumentBuilder()
+  const options = new DocumentBuilder()
       .setTitle('Travel agency API')
       .setVersion('1.0')
       .addTag('users')
+      .addTag('companies')
+      .addTag('tours')
+      .addTag('Hotel')
       .addBearerAuth('Authorization', 'header')
       .build();
-  const documentUsers = SwaggerModule.createDocument(app, optionsUsers, {
-    include: [UsersModule],
-  });
-  SwaggerModule.setup('api/users', app, documentUsers);
-
-  const optionsHotel = new DocumentBuilder()
-    .setTitle('Travel agency API')
-    .setVersion('1.0')
-    .addTag('Hotel')
-    .addBearerAuth('Authorization', 'header')
-    .build();
-  const documentHotel = SwaggerModule.createDocument(app, optionsHotel, {
-    include: [HotelModule],
-  });
-  SwaggerModule.setup('api/hotel', app, documentHotel);
+  const document = SwaggerModule.createDocument(app, options);
+  SwaggerModule.setup('api', app, document);
 
   app.useGlobalPipes(new ValidationPipe());
   await app.listen(3000);
