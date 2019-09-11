@@ -1,20 +1,8 @@
-import {IsEnum, IsNotEmpty, IsNumber, IsString, IsDate, MinDate, Min, IsOptional} from 'class-validator';
-import {RoomType} from '../enums/roomType.enum';
+import {IsNotEmpty, IsNumber, IsString, IsDate, MinDate, Min, IsOptional} from 'class-validator';
 import {ApiModelProperty} from '@nestjs/swagger';
 import {Type} from 'class-transformer';
 
 export class CreateTourDto {
-
-    @IsNumber()
-    @Min(1)
-    @IsNotEmpty()
-    @ApiModelProperty()
-    readonly price: number;
-
-    @IsEnum(RoomType)
-    @IsNotEmpty()
-    @ApiModelProperty({ enum: ['ECONOM', 'LUX', 'STANDARD']})
-    readonly roomType: RoomType;
 
     @Type(() => Date)
     @IsDate()
@@ -37,17 +25,6 @@ export class CreateTourDto {
 }
 
 export class UpdateTourDto {
-
-    @IsNumber()
-    @Min(1)
-    @IsOptional()
-    @ApiModelProperty()
-    readonly price: number;
-
-    @IsEnum(RoomType)
-    @IsOptional()
-    @ApiModelProperty({ enum: ['ECONOM', 'LUX', 'STANDARD']})
-    readonly roomType: RoomType;
 
     @Type(() => Date)
     @IsDate()
