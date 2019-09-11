@@ -2,7 +2,8 @@ import { Controller, Request, UseGuards, Body, Post, Get, UnauthorizedException 
 import { AuthGuard } from '@nestjs/passport';
 import { AuthService } from './auth.service';
 import { UserLogin, UserDTO } from '../users/dto/user.dto';
-import { ApiResponse } from '@nestjs/swagger';
+import { ApiResponse, ApiBearerAuth } from '@nestjs/swagger';
+import { IPlayload } from './interfaces/playload.interface';
 
 @Controller()
 export class AuthController {
@@ -11,10 +12,11 @@ export class AuthController {
         private readonly authService: AuthService,
     ) { }
 
-    @ApiResponse({ status: 200, description: '```Ok``` JWT token successfully generated' })
+    @ApiResponse({ status: 201, description: '```Ok``` JWT token successfully generated' })
     @ApiResponse({ status: 401, description: '```Unauthorized```' })
+    @ApiResponse({ status: 400, description: '```Bad Request```' })
     @Post('login')
-    async login(@Body() user: UserLogin) {
+    async login(@Body() user: UserLogin): Promise<IPlayload> {
         const checkedUser = await this.authService.validate(user);
         if (!checkedUser) {
             throw new UnauthorizedException();
@@ -24,16 +26,19 @@ export class AuthController {
 
     }
 
-    @ApiResponse({ status: 201, description: 'The User has been successfully registered.' })
-    @ApiResponse({ status: 404, description: 'Error Exception ```{ statusCode: 400, message: "User exists!" }```' })
+    @ApiResponse({ status: 201, description: '```Created```' })
+    @ApiResponse({ status: 403, description: '```Forbidden```' })
+    @ApiResponse({ status: 400, description: '```Bad Request```' })
     @Post('register')
-    async register(@Body() newUser: UserDTO) {
-        return await this.authService.register(newUser);
+    async register(@Body() newUser: UserDTO): Promise<IPlayload> {
+        const createdUser = await this.authService.register(newUser);
+        return await this.authService.login(createdUser);
     }
 
-    @UseGuards(AuthGuard('jwt'))
+    @ApiBearerAuth()
     @ApiResponse({ status: 200, description: '```Ok``` ' })
     @ApiResponse({ status: 401, description: '```Unauthorized```' })
+    @UseGuards(AuthGuard('jwt'))
     @Get('me')
     getProfile(@Request() req) {
         return req.user;
