@@ -1,5 +1,5 @@
 import {HttpException, HttpStatus, Injectable, NestMiddleware} from '@nestjs/common';
-import {CompaniesService} from '../companies.service';
+import {CompaniesService} from '../companies/companies.service';
 
 @Injectable()
 export class CompanyIsExistMiddleware implements NestMiddleware {
