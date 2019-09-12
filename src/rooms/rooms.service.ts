@@ -2,7 +2,7 @@ import {Injectable, Inject, HttpException, HttpStatus} from '@nestjs/common';
 import {Room} from './room.entity';
 import {Repository} from 'typeorm';
 import {Tour} from '../tours/tour.entity';
-import {CreateRoomDto} from './dto/room.dto';
+import {CreateRoomDto, UpdateRoomDto} from './dto/room.dto';
 import {IRoom} from './interfaces/room.interface';
 
 @Injectable()
@@ -36,5 +36,9 @@ export class RoomsService {
 
     async deleteById(id: number): Promise<IRoom> {
         return await this.roomRepository.remove( await this.roomRepository.findOne(id));
+    }
+
+    async update(id: number, data: UpdateRoomDto ): Promise<IRoom> {
+        return await this.roomRepository.save({ ...data, id: Number(id) });
     }
 }
