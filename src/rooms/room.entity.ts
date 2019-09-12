@@ -1,5 +1,6 @@
-import {Column, Entity, PrimaryGeneratedColumn} from 'typeorm';
+import {Column, Entity, PrimaryGeneratedColumn, ManyToOne, JoinColumn} from 'typeorm';
 import {RoomType} from './enums/roomType.enum';
+import {Tour} from '../tours/tour.entity';
 
 @Entity()
 export class Room {
@@ -11,4 +12,11 @@ export class Room {
 
     @Column('text')
     roomType: RoomType;
+
+    @ManyToOne(type => Tour, tour => tour.rooms, {onDelete: 'CASCADE'})
+    @JoinColumn({ name: 'tourId' })
+    tour: Tour;
+
+    @Column({ nullable: false })
+    tourId: number;
 }
