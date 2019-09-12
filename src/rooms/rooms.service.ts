@@ -25,4 +25,8 @@ export class RoomsService {
         }
         throw new HttpException('Tour not found', HttpStatus.NOT_FOUND);
     }
+
+    async getAll(): Promise<IRoom[]> {
+        return await this.roomRepository.find();
+    }
 }

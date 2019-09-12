@@ -1,4 +1,4 @@
-import {Body, Controller, Post} from '@nestjs/common';
+import {Body, Controller, Post, Get} from '@nestjs/common';
 import {RoomsService} from './rooms.service';
 import {ApiUseTags, ApiResponse} from '@nestjs/swagger';
 import {IRoom} from './interfaces/room.interface';
@@ -15,5 +15,11 @@ export class RoomsController {
     @ApiResponse({ status: 404, description: 'Error Exception ```{ statusCode: 404, message: "Tour not found" }```' })
     async create(@Body() room: CreateRoomDto): Promise<IRoom> {
         return await this.roomsService.createRoom(room);
+    }
+
+    @Get()
+    @ApiResponse({ status: 200, description: 'Success ```Rooms list```'})
+    getAll(): Promise<IRoom[]> {
+        return this.roomsService.getAll();
     }
 }
