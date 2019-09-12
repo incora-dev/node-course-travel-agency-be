@@ -1,5 +1,6 @@
-import {Column, Entity, OneToMany, PrimaryGeneratedColumn} from 'typeorm';
-import {Room} from 'src/rooms/room.entity';
+import {Column, Entity, JoinTable, ManyToMany, OneToMany, PrimaryGeneratedColumn} from 'typeorm';
+import {Room} from '../rooms/room.entity';
+import {Service} from '../services/service.entity';
 
 @Entity()
 export class Tour {
@@ -17,4 +18,8 @@ export class Tour {
 
     @OneToMany( type => Room, room => room.tour)
     rooms: Room[];
+
+    @ManyToMany(type => Service, service => service.tours, { cascade: true })
+    @JoinTable()
+    services: Service[];
 }
