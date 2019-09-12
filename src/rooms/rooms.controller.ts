@@ -1,4 +1,4 @@
-import {Body, Controller, Post, Get, Param} from '@nestjs/common';
+import {Body, Controller, Post, Get, Param, Delete} from '@nestjs/common';
 import {RoomsService} from './rooms.service';
 import {ApiUseTags, ApiResponse, ApiImplicitParam} from '@nestjs/swagger';
 import {IRoom} from './interfaces/room.interface';
@@ -29,5 +29,13 @@ export class RoomsController {
     @ApiResponse({ status: 404, description: 'Error Exception ```{ statusCode: 404, message: "Not found" }```' })
     getOneById(@Param('id') id: number): Promise<IRoom> {
         return this.roomsService.getOneByParams({ id });
+    }
+
+    @Delete(':id')
+    @ApiImplicitParam({ name: 'id', type: Number })
+    @ApiResponse({ status: 200, description: 'Room has been successfully deleted ```deleted Room()```' })
+    @ApiResponse({ status: 404, description: 'Error Exception ```{ statusCode: 404, message: "Not found" }```' })
+    deleteById(@Param() params): Promise<IRoom> {
+        return this.roomsService.deleteById(params.id);
     }
 }

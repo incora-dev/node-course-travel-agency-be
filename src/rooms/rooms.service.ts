@@ -33,4 +33,8 @@ export class RoomsService {
     async getOneByParams(params: object): Promise<IRoom> {
         return await this.roomRepository.findOne(params);
     }
+
+    async deleteById(id: number): Promise<IRoom> {
+        return await this.roomRepository.remove( await this.roomRepository.findOne(id));
+    }
 }
