@@ -20,7 +20,7 @@ export class ToursService {
     }
 
     async getAll(): Promise<ITour[]> {
-        return await this.tourRepository.find();
+        return await this.tourRepository.find({relations: ['rooms']});
     }
 
     async deleteById(id: number): Promise<ITour> {

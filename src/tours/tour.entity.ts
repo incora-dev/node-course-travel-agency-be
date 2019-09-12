@@ -1,4 +1,5 @@
-import {Column, Entity, PrimaryGeneratedColumn} from 'typeorm';
+import {Column, Entity, OneToMany, PrimaryGeneratedColumn} from 'typeorm';
+import {Room} from 'src/rooms/room.entity';
 
 @Entity()
 export class Tour {
@@ -13,4 +14,7 @@ export class Tour {
 
     @Column()
     description: string;
+
+    @OneToMany( type => Room, room => room.tour)
+    rooms: Room[];
 }
