@@ -2,8 +2,6 @@ import {ValidationPipe} from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
-import { UsersModule } from './users/users.module';
-import { HotelModule } from './hotel/hotel.module';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -16,6 +14,7 @@ async function bootstrap() {
       .addTag('companies')
       .addTag('tours')
       .addTag('Hotel')
+      .addTag('rooms')
       .addBearerAuth('Authorization', 'header')
       .build();
   const document = SwaggerModule.createDocument(app, options);
