@@ -1,6 +1,6 @@
-import {Body, Controller, Post, Get} from '@nestjs/common';
+import {Body, Controller, Post, Get, Param} from '@nestjs/common';
 import {RoomsService} from './rooms.service';
-import {ApiUseTags, ApiResponse} from '@nestjs/swagger';
+import {ApiUseTags, ApiResponse, ApiImplicitParam} from '@nestjs/swagger';
 import {IRoom} from './interfaces/room.interface';
 import {CreateRoomDto} from './dto/room.dto';
 
@@ -21,5 +21,13 @@ export class RoomsController {
     @ApiResponse({ status: 200, description: 'Success ```Rooms list```'})
     getAll(): Promise<IRoom[]> {
         return this.roomsService.getAll();
+    }
+
+    @Get(':id')
+    @ApiImplicitParam({ name: 'id', type: Number })
+    @ApiResponse({ status: 200, description: 'Ok ```Room Object```'})
+    @ApiResponse({ status: 404, description: 'Error Exception ```{ statusCode: 404, message: "Not found" }```' })
+    getOneById(@Param('id') id: number): Promise<IRoom> {
+        return this.roomsService.getOneByParams({ id });
     }
 }

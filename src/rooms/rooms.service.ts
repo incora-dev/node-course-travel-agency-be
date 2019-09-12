@@ -29,4 +29,8 @@ export class RoomsService {
     async getAll(): Promise<IRoom[]> {
         return await this.roomRepository.find();
     }
+
+    async getOneByParams(params: object): Promise<IRoom> {
+        return await this.roomRepository.findOne(params);
+    }
 }
