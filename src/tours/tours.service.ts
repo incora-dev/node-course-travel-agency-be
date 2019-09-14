@@ -18,7 +18,7 @@ export class ToursService {
     ) {}
 
     async getOneByParams(params: object): Promise<ITour> {
-        return await this.tourRepository.findOne(params);
+        return await this.tourRepository.findOne(params, {relations: ['rooms', 'services']});
     }
 
     async createTour(tour: CreateTourDto): Promise<ITour> {
@@ -44,7 +44,7 @@ export class ToursService {
     }
 
     async getAll(): Promise<ITour[]> {
-        return await this.tourRepository.find({relations: ['rooms']});
+        return await this.tourRepository.find({relations: ['rooms', 'services']});
     }
 
     async deleteById(id: number): Promise<ITour> {
