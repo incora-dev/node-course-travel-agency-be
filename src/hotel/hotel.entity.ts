@@ -1,4 +1,5 @@
-import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
+import {Entity, PrimaryGeneratedColumn, Column, OneToMany} from 'typeorm';
+import {Tour} from '../tours/tour.entity';
 
 @Entity()
 export class Hotel {
@@ -16,4 +17,7 @@ export class Hotel {
 
     @Column()
     rating: number;
+
+    @OneToMany( type => Tour, tour => tour.hotel)
+    tours: Tour[];
 }
