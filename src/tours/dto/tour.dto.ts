@@ -1,7 +1,8 @@
 import {IsNotEmpty, IsNumber, IsString, IsDate, MinDate, Min, IsOptional, IsArray} from 'class-validator';
 import {ApiModelProperty} from '@nestjs/swagger';
 import {Type} from 'class-transformer';
-import {Service} from '../../services/service.entity';
+import {Room} from '../../rooms/room.entity';
+import {CreateRoomDto} from '../../rooms/dto/room.dto';
 
 export class CreateTourDto {
 
@@ -24,10 +25,22 @@ export class CreateTourDto {
     @ApiModelProperty()
     readonly description: string;
 
+    @Type(() => Room)
     @IsArray()
-    @IsOptional()
+    @IsNotEmpty()
+    @ApiModelProperty({type: [CreateRoomDto]})
+    readonly rooms: Room[];
+
+    @IsArray()
+    @IsNotEmpty()
     @ApiModelProperty()
-    readonly services: Service[];
+    readonly services: string[];
+
+    @IsNumber()
+    @Min(1)
+    @IsNotEmpty()
+    @ApiModelProperty()
+    readonly hotelId: number;
 }
 
 export class UpdateTourDto {
