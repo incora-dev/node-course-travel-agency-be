@@ -13,9 +13,9 @@ export class CompaniesController {
     @ApiResponse({ status: 201, description: 'Company has been successfully created.' })
     @ApiResponse({ status: 400, description: 'Error Exception ```{ statusCode: 400, message: "Bad request" }```' })
     @ApiResponse({ status: 409, description: 'Error Exception ```{ statusCode: 409, message: "Company already exists!" }```' })
+    @ApiResponse({ status: 409, description: 'Error Exception ```{ statusCode: 409, message: "Address already exists!" }```' })
     async create(@Body() company: CreateCompanyDto): Promise<ICompany> {
-        const contactEmail = company.contactEmail;
-        const companyFromDB = await this.companiesService.getOneByParams({ contactEmail });
+        const companyFromDB = await this.companiesService.getOneByParams({ contactEmail: company.contactEmail });
         if (companyFromDB) {
             throw new HttpException('Company already exists!', HttpStatus.CONFLICT);
         }
