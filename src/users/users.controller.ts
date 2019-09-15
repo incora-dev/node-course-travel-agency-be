@@ -3,9 +3,10 @@ import {AuthGuard} from '@nestjs/passport';
 import {RoleGuard} from '../auth/guards/role.guard';
 import {UsersService} from './users.service';
 import {IUser} from './interfaces/user.interface';
-import {ApiResponse, ApiImplicitParam, ApiBearerAuth} from '@nestjs/swagger';
+import {ApiResponse, ApiImplicitParam, ApiBearerAuth, ApiUseTags} from '@nestjs/swagger';
 import {UserDTO, UpdateUserDTO} from './dto/user.dto';
 
+@ApiUseTags('users')
 @Controller('users')
 export class UsersController {
     constructor(private readonly usersService: UsersService) { }

@@ -21,7 +21,7 @@ export class AddressService {
               street: address.street,
               zip: address.zip });
         if (isAddressExist) {
-            throw new HttpException('Address exists!', 400);
+            throw new HttpException('Address exists!', 403);
         }
         return await this.addressRepository.save(address);
     }

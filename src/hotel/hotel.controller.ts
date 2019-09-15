@@ -2,8 +2,9 @@ import { Controller, Get, Param, Post, Body, Put, Delete } from '@nestjs/common'
 import { HotelService } from './hotel.service';
 import { IHotel } from './interfaces/hotel.interface';
 import { HotelDTO, UpdateHotelDTO } from './dto/hotel.dto';
-import { ApiResponse } from '@nestjs/swagger';
+import { ApiResponse, ApiUseTags } from '@nestjs/swagger';
 
+@ApiUseTags('hotel')
 @Controller('hotel')
 export class HotelController {
     constructor(private readonly hotelService: HotelService) {}
