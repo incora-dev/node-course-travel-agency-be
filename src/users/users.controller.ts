@@ -11,7 +11,7 @@ export class UsersController {
     constructor(private readonly usersService: UsersService) { }
 
     @ApiBearerAuth()
-    @UseGuards(AuthGuard('jwt'), RoleGuard)
+    @UseGuards(AuthGuard('jwt')/*, RoleGuard*/)
     @ApiImplicitParam({ name: 'id', type: Number })
     @ApiResponse({ status: 200, description: '```Ok``` Successfully removed' })
     @ApiResponse({ status: 404, description: '```Not Found```' })

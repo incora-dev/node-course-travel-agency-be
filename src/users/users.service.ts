@@ -22,9 +22,9 @@ export class UsersService {
 
     async updateUser(id: number, data: UpdateUserDTO ): Promise<IUser> {
         /*Users shouldn't have an access to change their roles */
-        if (data.role) {
+        /*if (data.role) {
             data.role = undefined;
-        }
+        }*/
 
         /*If user changes his password, we'll crypt it, before sending to DB */
         if (data.password) {

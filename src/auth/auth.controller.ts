@@ -3,7 +3,7 @@ import { AuthGuard } from '@nestjs/passport';
 import { AuthService } from './auth.service';
 import { UserLogin, UserDTO } from '../users/dto/user.dto';
 import { ApiResponse, ApiBearerAuth } from '@nestjs/swagger';
-import { IPlayload } from './interfaces/playload.interface';
+import { ILogin } from './interfaces/auth.interface';
 
 @Controller()
 export class AuthController {
@@ -16,7 +16,7 @@ export class AuthController {
     @ApiResponse({ status: 401, description: '```Unauthorized```' })
     @ApiResponse({ status: 400, description: '```Bad Request```' })
     @Post('login')
-    async login(@Body() user: UserLogin): Promise<IPlayload> {
+    async login(@Body() user: UserLogin): Promise<ILogin> {
         const checkedUser = await this.authService.validate(user);
         if (!checkedUser) {
             throw new UnauthorizedException();
@@ -30,7 +30,7 @@ export class AuthController {
     @ApiResponse({ status: 403, description: '```Forbidden```' })
     @ApiResponse({ status: 400, description: '```Bad Request```' })
     @Post('register')
-    async register(@Body() newUser: UserDTO): Promise<IPlayload> {
+    async register(@Body() newUser: UserDTO): Promise<ILogin> {
         const createdUser = await this.authService.register(newUser);
         return await this.authService.login(createdUser);
     }

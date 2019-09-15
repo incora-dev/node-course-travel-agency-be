@@ -18,7 +18,7 @@ export class User {
     @Column({ length: 25 })
     lastName: string;
 
-    @Column()
+    @Column({ select: false })
     @Exclude()
     password: string;
 
@@ -27,6 +27,6 @@ export class User {
         this.password = await bcrypt.hash(this.password, 10);
     }
 
-    @Column()
-    role: UserRole;
+    /*@Column()
+    role: UserRole;*/
 }

@@ -29,11 +29,11 @@ export class UpdateUserDTO {
     @ApiModelProperty()
     password?: string;
 
-    @IsOptional()
+    /*@IsOptional()
     @IsNotEmpty()
     @IsEnum(UserRole)
     @ApiModelProperty({ enum: ['ADMIN', 'USER'] })
-    role?: UserRole;
+    role?: UserRole;*/
 }
 
 export class UserDTO {
@@ -58,10 +58,10 @@ export class UserDTO {
     @ApiModelProperty()
     readonly password: string;
 
-    @IsNotEmpty()
+    /*@IsNotEmpty()
     @IsEnum(UserRole)
     @ApiModelProperty({ enum: ['ADMIN', 'USER'] })
-    readonly role: UserRole;
+    readonly role: UserRole;*/
 }
 
 export class UserLogin {
