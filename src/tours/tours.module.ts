@@ -3,7 +3,7 @@ import { ToursService } from './tours.service';
 import { ToursController } from './tours.controller';
 import {DatabaseModule} from '../core/database.module';
 import {tourProviders} from './tour.providers';
-import {TourIsExistMiddleware} from 'src/middlewares/tour.isExist.middleware';
+import {TourIsExistMiddleware} from '../middlewares/tour.isExist.middleware';
 
 @Module({
   imports: [DatabaseModule],
