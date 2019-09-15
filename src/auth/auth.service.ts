@@ -4,7 +4,9 @@ import { JwtService } from '@nestjs/jwt';
 import { UsersService } from '../users/users.service';
 import { UserLogin, UserDTO } from '../users/dto/user.dto';
 import { IUser } from '../users/interfaces/user.interface';
-import { IPlayload } from './interfaces/playload.interface';
+import { ILogin } from './interfaces/auth.interface';
+import { getRepository } from 'typeorm';
+import { User } from '../users/user.entity';
 
 @Injectable()
 export class AuthService {
@@ -24,8 +26,11 @@ export class AuthService {
 
     /*--- Local validation ----- */
     async validate(userData: UserLogin): Promise<boolean> {
-        const email = userData.email;
-        const user = await this.usersService.getOneByParams({ email });
+        const user = await getRepository(User)
+            .createQueryBuilder('user')
+            .addSelect('user.password')
+            .where('user.email = :email', { email: userData.email })
+            .getRawOne();
         if (user) {
             return bcrypt.compare(userData.password, user.password);
         }
@@ -33,8 +38,8 @@ export class AuthService {
     }
 
     /*--- Jwt sign (generates token) ---*/
-    async login(user: any): Promise<IPlayload> {
-        const payload = { role: user.role, email: user.email, id: user.id };
+    async login(user: any): Promise<ILogin> {
+        const payload = { /*role: user.role, */email: user.email, id: user.id };
         return {
             access_token: this.jwtService.sign(payload),
             user_id: user.id,
