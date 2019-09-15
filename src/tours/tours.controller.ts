@@ -20,6 +20,8 @@ export class ToursController {
     @Post()
     @ApiResponse({ status: 201, description: 'Tour has been successfully created. ```new Tour()```' })
     @ApiResponse({ status: 400, description: 'Error Exception ```{ statusCode: 400, message: "Bad request" }```' })
+    @ApiResponse({ status: 404, description: 'Error Exception ```{ statusCode: 404, message: "Hotel not found" }```' })
+    @ApiResponse({ status: 404, description: 'Error Exception ```{ statusCode: 404, message: "Service not found" }```' })
     async create(@Body() tour: CreateTourDto): Promise<ITour> {
         return await this.toursService.createTour(tour);
     }
@@ -43,7 +45,7 @@ export class ToursController {
     @ApiResponse({ status: 200, description: 'Tour has been successfully updated ```updated Tour()```' })
     @ApiResponse({ status: 400, description: 'Error Exception ```{ statusCode: 400, message: "Bad request" }```' })
     @ApiResponse({ status: 404, description: 'Error Exception ```{ statusCode: 404, message: "Not found" }```' })
-    updateCompany(@Param() params, @Body() tour: UpdateTourDto): Promise<ITour> {
+    update(@Param() params, @Body() tour: UpdateTourDto): Promise<ITour> {
         return this.toursService.update(params.id, tour);
     }
 }
