@@ -17,7 +17,7 @@ export class Company {
     @JoinColumn()
     address1: Address;
 
-    @OneToOne(type => Address, {cascade: true})
+    @OneToOne(type => Address, {cascade: true, nullable: true})
     @JoinColumn()
     address2?: Address;
 }

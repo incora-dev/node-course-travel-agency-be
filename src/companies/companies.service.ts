@@ -23,11 +23,11 @@ export class CompaniesService {
     }
 
     async getOneByParams(params: object): Promise<ICompany> {
-        return await this.companyRepository.findOne(params);
+        return await this.companyRepository.findOne(params, {relations: ['address1', 'address2']});
     }
 
     async getAll(): Promise<ICompany[]> {
-        return await this.companyRepository.find();
+        return await this.companyRepository.find({relations: ['address1', 'address2']});
     }
 
     async deleteCompanyById(id: number): Promise<ICompany> {
