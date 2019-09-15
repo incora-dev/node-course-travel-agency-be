@@ -1,5 +1,8 @@
 import {IsEmail, IsNotEmpty, IsString, MinLength, IsOptional} from 'class-validator';
 import {ApiModelProperty} from '@nestjs/swagger';
+import {Type} from 'class-transformer';
+import {Address} from '../../address/address.entity';
+import {AddressDTO} from '../../address/dto/address.dto';
 
 export class CreateCompanyDto {
 
@@ -14,37 +17,23 @@ export class CreateCompanyDto {
     @ApiModelProperty()
     readonly name: string;
 
-    @IsString()
-    @MinLength(5)
+    @Type(() => Address)
     @IsNotEmpty()
-    @ApiModelProperty()
-    readonly city: string;
+    @ApiModelProperty({type: AddressDTO})
+    readonly address1: Address;
 
-    @IsString()
-    @MinLength(5)
-    @IsNotEmpty()
-    @ApiModelProperty()
-    readonly state: string;
-
-    @IsString()
-    @MinLength(5)
-    @IsNotEmpty()
-    @ApiModelProperty()
-    readonly address1: string;
-
-    @IsString()
+    @Type(() => Address)
     @IsOptional()
-    @ApiModelProperty()
-    readonly address2?: string;
-
-    @IsString()
-    @MinLength(3)
-    @IsNotEmpty()
-    @ApiModelProperty()
-    readonly zip: string;
+    @ApiModelProperty({type: AddressDTO})
+    readonly address2?: Address;
 }
 
 export class UpdateCompanyDto {
+
+    @IsEmail()
+    @IsOptional()
+    @ApiModelProperty()
+    readonly contactEmail: string;
 
     @IsString()
     @MinLength(3)
@@ -52,33 +41,13 @@ export class UpdateCompanyDto {
     @ApiModelProperty()
     readonly name: string;
 
-    @IsString()
-    @MinLength(5)
+    @Type(() => Address)
     @IsOptional()
-    @ApiModelProperty()
-    readonly city: string;
+    @ApiModelProperty({type: AddressDTO})
+    readonly address1: Address;
 
-    @IsString()
-    @MinLength(5)
+    @Type(() => Address)
     @IsOptional()
-    @ApiModelProperty()
-    readonly state: string;
-
-    @IsString()
-    @MinLength(5)
-    @IsOptional()
-    @ApiModelProperty()
-    readonly address1: string;
-
-    @IsString()
-    @IsOptional()
-    @ApiModelProperty()
-    readonly address2?: string;
-
-    @IsString()
-    @MinLength(3)
-    @IsOptional()
-    @ApiModelProperty()
-    readonly zip: string;
-
+    @ApiModelProperty({type: AddressDTO})
+    readonly address2?: Address;
 }

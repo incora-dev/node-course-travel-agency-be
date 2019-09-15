@@ -4,10 +4,15 @@ import {CompaniesController} from './companies.controller';
 import {DatabaseModule} from '../core/database.module';
 import {companyProviders} from './company.providers';
 import {CompanyIsExistMiddleware} from '../middlewares/company.isExist.middleware';
+import {addressProviders} from '../address/address.providers';
 
 @Module({
   imports: [DatabaseModule],
-  providers: [ ...companyProviders, CompaniesService],
+  providers: [
+      CompaniesService,
+      ...companyProviders,
+      ...addressProviders,
+  ],
   controllers: [CompaniesController],
 })
 export class CompaniesModule implements NestModule {
