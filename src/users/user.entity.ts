@@ -1,7 +1,8 @@
-import { Column, Entity, PrimaryGeneratedColumn, BeforeInsert, OneToMany } from 'typeorm';
+import { Column, Entity, PrimaryGeneratedColumn, BeforeInsert, OneToMany, OneToOne } from 'typeorm';
 import { Exclude } from 'class-transformer';
 import * as bcrypt from 'bcrypt';
 import { UserRole } from './enums/user-role.enum';
+import { Company } from '../companies/company.entity';
 import { Rating } from '../rating/rating.entity';
 
 @Entity()
@@ -30,6 +31,11 @@ export class User {
 
     /*@Column()
     role: UserRole;*/
+
+    @OneToOne(type => Company, company => company.owner)
+    company: Company;
+
     @OneToMany(type => Rating, rating => rating.user)
     rating: Rating[];
+  
 }
