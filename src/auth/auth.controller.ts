@@ -2,9 +2,10 @@ import { Controller, Request, UseGuards, Body, Post, Get, UnauthorizedException 
 import { AuthGuard } from '@nestjs/passport';
 import { AuthService } from './auth.service';
 import { UserLogin, UserDTO } from '../users/dto/user.dto';
-import { ApiResponse, ApiBearerAuth } from '@nestjs/swagger';
+import { ApiResponse, ApiBearerAuth, ApiUseTags } from '@nestjs/swagger';
 import { ILogin } from './interfaces/auth.interface';
 
+@ApiUseTags('auth')
 @Controller()
 export class AuthController {
 

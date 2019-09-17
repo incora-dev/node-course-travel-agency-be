@@ -14,14 +14,6 @@ export class HotelDTO {
     @IsPhoneNumber('ZZ')
     @ApiModelProperty()
     phone: string;
-
-    @IsNotEmpty()
-    @IsNumber()
-    @Min(0)
-    @Max(5)
-    @ApiModelProperty()
-    rating: number;
-
 }
 
 export class UpdateHotelDTO {
@@ -40,12 +32,4 @@ export class UpdateHotelDTO {
     @IsPhoneNumber('ZZ')
     @ApiModelProperty()
     phone?: string;
-
-    @IsOptional()
-    @IsNotEmpty()
-    @IsNumber()
-    @Min(0)
-    @Max(5)
-    @ApiModelProperty()
-    rating?: number;
 }

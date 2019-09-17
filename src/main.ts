@@ -11,9 +11,12 @@ async function bootstrap() {
       .setTitle('Travel agency API')
       .setVersion('1.0')
       .addTag('users')
+      .addTag('auth')
       .addTag('companies')
       .addTag('tours')
-      .addTag('Hotel')
+      .addTag('hotel')
+      .addTag('address')
+      .addTag('rating')
       .addTag('rooms')
       .addBearerAuth('Authorization', 'header')
       .build();
