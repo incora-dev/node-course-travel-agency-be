@@ -14,7 +14,7 @@ export class CompaniesService {
         private readonly addressRepository: Repository<Address>,
     ) { }
 
-    async createCompany(company: CreateCompanyDto): Promise<ICompany> {
+    async createCompany(company: ICompany): Promise<ICompany> {
         const address1 = await this.addressRepository.findOne(company.address1);
         if (address1) {
             throw new HttpException('Address already exists!', HttpStatus.CONFLICT);
