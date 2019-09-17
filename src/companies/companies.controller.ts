@@ -28,6 +28,7 @@ export class CompaniesController {
     @ApiBearerAuth()
     @ApiResponse({ status: 201, description: 'Company has been successfully created.' })
     @ApiResponse({ status: 400, description: 'Error Exception ```{ statusCode: 400, message: "Bad request" }```' })
+    @ApiResponse({ status: 401, description: 'Error Exception```{ statusCode: 403, message: "Forbidden"}```' })
     @ApiResponse({ status: 409, description: 'Error Exception ```{ statusCode: 409, message: "Company already exists!" }```' })
     @ApiResponse({ status: 409, description: 'Error Exception ```{ statusCode: 409, message: "Address already exists!" }```' })
     @ApiResponse({ status: 409, description: 'Error Exception ```{ statusCode: 409, message: "Company with this owner already exist!" }```' })
@@ -68,11 +69,19 @@ export class CompaniesController {
     }
 
     @Put(':id')
+    @UseGuards(AuthGuard('jwt'))
+    @ApiBearerAuth()
     @ApiImplicitParam({ name: 'id', type: Number })
     @ApiResponse({ status: 200, description: 'Company Object ```updated Company()```' })
     @ApiResponse({ status: 400, description: 'Error Exception ```{ statusCode: 400, message: "Bad request" }```' })
+    @ApiResponse({ status: 401, description: 'Error Exception ```{ statusCode: 401, message: "Unauthorized" }```' })
+    @ApiResponse({ status: 403, description: 'Error Exception```{ statusCode: 403, message: "Forbidden"}```' })
     @ApiResponse({ status: 404, description: 'Error Exception ```{ statusCode: 404, message: "Not found" }```' })
-    updateCompany(@Param() params, @Body() company: UpdateCompanyDto): Promise<ICompany> {
+    async updateCompany(@Param() params, @Body() company: UpdateCompanyDto, @Request() req): Promise<ICompany> {
+        const checkCompanyByOwner = await this.companiesService.getOneByParams({ id: Number(params.id) });
+        if (checkCompanyByOwner.ownerId !== req.user.userId) {
+            throw new HttpException('Forbidden', HttpStatus.FORBIDDEN);
+        }
         return this.companiesService.updateCompany(params.id, company);
     }
 

@@ -8,4 +8,5 @@ export interface ICompany {
     address1: Address;
     address2?: Address;
     owner?: User;
+    ownerId?: number;
 }
