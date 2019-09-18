@@ -1,6 +1,7 @@
-import {Column, Entity, JoinColumn, OneToOne, PrimaryGeneratedColumn} from 'typeorm';
+import {Column, Entity, JoinColumn, OneToMany, OneToOne, PrimaryGeneratedColumn} from 'typeorm';
 import {Address} from '../address/address.entity';
 import {User} from '../users/user.entity';
+import {Hotel} from '../hotel/hotel.entity';
 
 @Entity()
 export class Company {
@@ -28,4 +29,7 @@ export class Company {
 
     @Column({ nullable: false })
     ownerId: number;
+
+    @OneToMany(type => Hotel, hotel => hotel.company)
+    hotels: Hotel[];
 }
