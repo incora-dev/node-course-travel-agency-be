@@ -10,9 +10,11 @@ import { RoomsModule } from './rooms/rooms.module';
 import { ServicesModule } from './services/services.module';
 import { AddressModule } from './address/address.module';
 import { RatingModule } from './rating/rating.module';
+import { ImageModule } from './image/image.module';
 
 @Module({
-  imports: [UsersModule, AuthModule, ToursModule, CompaniesModule, HotelModule, RoomsModule, ServicesModule, AddressModule, RatingModule],
+  imports: [UsersModule, AuthModule, ToursModule, CompaniesModule, HotelModule, RoomsModule,
+  ServicesModule, AddressModule, RatingModule, ImageModule],
   controllers: [AppController],
   providers: [AppService],
 })

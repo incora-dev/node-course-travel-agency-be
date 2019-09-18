@@ -37,5 +37,5 @@ export class User {
 
     @OneToMany(type => Rating, rating => rating.user)
     rating: Rating[];
-  
+
 }
