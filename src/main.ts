@@ -18,6 +18,7 @@ async function bootstrap() {
       .addTag('address')
       .addTag('rating')
       .addTag('rooms')
+      .addTag('image')
       .addBearerAuth('Authorization', 'header')
       .build();
   const document = SwaggerModule.createDocument(app, options);

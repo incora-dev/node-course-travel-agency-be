@@ -18,11 +18,11 @@ export class RatingService {
         if (!isHotelExist) {
             throw new HttpException('Hotel not found!', 404);
         }
-        const checkForPoints = await this.ratingRepository.findOne({ hotelId: hotelId, userId: userId});
+        const checkForPoints = await this.ratingRepository.findOne({ hotelId: Number(hotelId), userId: Number(userId)});
         if (checkForPoints) {
             throw new HttpException('You can\'t leave rating twice', 403);
         }
-        return await this.ratingRepository.save({...point, hotelId: hotelId, userId: userId});
+        return await this.ratingRepository.save({...point, hotelId: Number(hotelId), userId: Number(userId)});
     }
 
     async getAverage(hotelId: number): Promise<number> {
