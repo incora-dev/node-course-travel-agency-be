@@ -44,8 +44,13 @@ export class ToursService {
         return await this.tourRepository.find({relations: ['rooms', 'services']});
     }
 
-    async deleteById(id: number): Promise<ITour> {
-        return await this.tourRepository.remove( await this.tourRepository.findOne(id));
+    async deleteById(id: number, userId: number): Promise<ITour> {
+        const tour = await this.tourRepository.findOne(id);
+        const hotel = await this.hotelRepository.findOne( tour.hotelId, {relations: [ 'company' ]});
+        if (hotel.company.ownerId !== userId) {
+            throw new HttpException('Forbidden', HttpStatus.FORBIDDEN);
+        }
+        return await this.tourRepository.remove(tour);
     }
 
     async update(id: number, data: UpdateTourDto ): Promise<ITour> {

@@ -39,11 +39,15 @@ export class ToursController {
     }
 
     @Delete(':id')
+    @UseGuards(AuthGuard('jwt'))
+    @ApiBearerAuth()
     @ApiImplicitParam({ name: 'id', type: Number })
     @ApiResponse({ status: 200, description: 'Tour has been successfully deleted ```deleted Tour()```' })
+    @ApiResponse({ status: 401, description: 'Error Exception ```{ statusCode: 401, message: "Unauthorized" }```' })
+    @ApiResponse({ status: 403, description: 'Error Exception```{ statusCode: 403, message: "Forbidden"}```' })
     @ApiResponse({ status: 404, description: 'Error Exception ```{ statusCode: 404, message: "Not found" }```' })
-    deleteById(@Param() params): Promise<ITour> {
-        return this.toursService.deleteById(params.id);
+    deleteById(@Param() params, @Request() req): Promise<ITour> {
+        return this.toursService.deleteById(params.id, req.user.userId);
     }
 
     @Put(':id')
