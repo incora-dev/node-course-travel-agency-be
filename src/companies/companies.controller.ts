@@ -61,10 +61,16 @@ export class CompaniesController {
     }
 
     @Delete(':id')
+    @UseGuards(AuthGuard('jwt'))
+    @ApiBearerAuth()
     @ApiImplicitParam({ name: 'id', type: Number })
     @ApiResponse({ status: 200, description: 'Company Object ```deleted Company()```' })
     @ApiResponse({ status: 404, description: 'Error Exception ```{ statusCode: 404, message: "Not found" }```' })
-    deleteCompanyById(@Param() params): Promise<ICompany> {
+    async deleteCompanyById(@Param() params, @Request() req): Promise<ICompany> {
+        const checkCompanyByOwner = await this.companiesService.getOneByParams({ id: Number(params.id) });
+        if (checkCompanyByOwner.ownerId !== req.user.userId) {
+            throw new HttpException('Forbidden', HttpStatus.FORBIDDEN);
+        }
         return this.companiesService.deleteCompanyById(params.id);
     }
 
@@ -74,13 +80,19 @@ export class CompaniesController {
     @ApiImplicitParam({ name: 'id', type: Number })
     @ApiResponse({ status: 200, description: 'Company Object ```updated Company()```' })
     @ApiResponse({ status: 400, description: 'Error Exception ```{ statusCode: 400, message: "Bad request" }```' })
+    @ApiResponse({ status: 400, description: 'Error Exception ```{ statusCode: 400, message: "Address don`t have id" }```' })
     @ApiResponse({ status: 401, description: 'Error Exception ```{ statusCode: 401, message: "Unauthorized" }```' })
     @ApiResponse({ status: 403, description: 'Error Exception```{ statusCode: 403, message: "Forbidden"}```' })
     @ApiResponse({ status: 404, description: 'Error Exception ```{ statusCode: 404, message: "Not found" }```' })
+    @ApiResponse({ status: 409, description: 'Error Exception ```{ statusCode: 409, message: "Company with this email already exists!" }```' })
+    @ApiResponse({ status: 409, description: 'Error Exception ```{ statusCode: 409, message: "First address can`t delete" }```' })
+    @ApiResponse({ status: 409, description: 'Error Exception ```{ statusCode: 409, message: "Address already exists, change address!" }```' })
     async updateCompany(@Param() params, @Body() company: UpdateCompanyDto, @Request() req): Promise<ICompany> {
         const checkCompanyByOwner = await this.companiesService.getOneByParams({ id: Number(params.id) });
         if (checkCompanyByOwner.ownerId !== req.user.userId) {
             throw new HttpException('Forbidden', HttpStatus.FORBIDDEN);
+        } else if (company.contactEmail && await this.companiesService.getOneByParams({ contactEmail: company.contactEmail })) {
+            throw new HttpException('Company with this email already exists!', HttpStatus.CONFLICT);
         }
         return this.companiesService.updateCompany(params.id, company);
     }
