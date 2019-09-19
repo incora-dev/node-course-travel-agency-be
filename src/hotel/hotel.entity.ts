@@ -1,8 +1,9 @@
-import {Entity, PrimaryGeneratedColumn, Column, OneToMany, ManyToOne, JoinColumn} from 'typeorm';
+import {Entity, PrimaryGeneratedColumn, Column, OneToMany, ManyToOne, JoinColumn, OneToOne} from 'typeorm';
 import {Tour} from '../tours/tour.entity';
 import { Rating } from '../rating/rating.entity';
 import { Image } from '../image/image.entity';
 import {Company} from '../companies/company.entity';
+import { Address } from '../address/address.entity';
 
 @Entity()
 export class Hotel {
@@ -33,4 +34,11 @@ export class Hotel {
 
     @Column({ nullable: false })
     companyId: number;
+
+    @Column({ nullable: true })
+    addressId: number;
+
+    @OneToOne(type => Address, { cascade: true })
+    @JoinColumn({ name: 'addressId' })
+    address: Address;
 }

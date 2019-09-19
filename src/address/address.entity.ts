@@ -1,4 +1,5 @@
-import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, OneToOne, JoinColumn } from 'typeorm';
+import { Location } from '../location/location.entity';
 
 @Entity()
 export class Address {
@@ -16,4 +17,11 @@ export class Address {
 
     @Column()
     street: string;
+
+    @Column({ nullable: true })
+    locationId: number;
+
+    @OneToOne(type => Location, { cascade: true })
+    @JoinColumn({ name: 'locationId' })
+    location: Location;
 }

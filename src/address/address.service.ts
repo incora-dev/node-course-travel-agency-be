@@ -34,7 +34,7 @@ export class AddressService {
         return this.addressRepository.remove(toRemove);
     }
 
-    async getOneByParams(params: object): Promise<IAddress> {
+    async getOneByParams(params: object): Promise<Address> {
         return await this.addressRepository.findOne(params);
     }
 }
