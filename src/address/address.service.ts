@@ -18,8 +18,7 @@ export class AddressService {
             { country: address.country,
               city: address.city,
               state: address.state,
-              street: address.street,
-              zip: address.zip });
+              street: address.street });
         if (isAddressExist) {
             throw new HttpException('Address exists!', 403);
         }

@@ -1,8 +1,11 @@
-import { Controller, Get, Param, Post, Body, Put, Delete } from '@nestjs/common';
+import { Controller, Get, Param, Post, Body, Put, Delete, UseGuards, Request, HttpException } from '@nestjs/common';
 import { HotelService } from './hotel.service';
 import { IHotel } from './interfaces/hotel.interface';
 import { HotelDTO, UpdateHotelDTO } from './dto/hotel.dto';
-import { ApiResponse, ApiUseTags } from '@nestjs/swagger';
+import { ApiResponse, ApiUseTags, ApiBearerAuth } from '@nestjs/swagger';
+import { AuthGuard } from '@nestjs/passport';
+import { Company } from '../companies/company.entity';
+import { getRepository } from 'typeorm';
 
 @ApiUseTags('hotel')
 @Controller('hotel')
@@ -23,10 +26,22 @@ export class HotelController {
     }
 
     @Post()
+    @UseGuards(AuthGuard('jwt'))
+    @ApiBearerAuth()
     @ApiResponse({ status: 201, description: '```Created ```' })
     @ApiResponse({ status: 403, description: '```Forbidden``` Hotel already exists' })
-    async create(@Body() hotel: HotelDTO): Promise<IHotel> {
-        return await this.hotelService.create(hotel);
+    @ApiResponse({ status: 404, description: '```Not found``` You should have a Company to create a hotel' })
+    async create(@Request() req, @Body() hotel: HotelDTO): Promise<IHotel> {
+        const UserId = req.user.userId;
+        const isUserHaveCompany = await getRepository(Company)
+            .createQueryBuilder('company')
+            .select()
+            .where('company.ownerId = :id', { id: Number(UserId) })
+            .getRawOne();
+        if(!isUserHaveCompany){
+            throw new HttpException('Not found', 404);
+        }
+        return await this.hotelService.create(hotel, isUserHaveCompany.company_id);
     }
 
     @Put(':id')
