@@ -1,4 +1,4 @@
-import { IsNumberString, IsOptional, IsEmpty } from 'class-validator';
+import { IsNumberString, IsOptional } from 'class-validator';
 import { ApiModelProperty } from '@nestjs/swagger';
 
 export class LocationDTO {
@@ -12,7 +12,6 @@ export class LocationDTO {
 }
 export class UpdateLocationDTO {
     @IsOptional()
-    @IsEmpty()
     id: number;
 
     @IsOptional()
