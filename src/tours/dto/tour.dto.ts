@@ -3,6 +3,8 @@ import {ApiModelProperty} from '@nestjs/swagger';
 import {Type} from 'class-transformer';
 import {Room} from '../../rooms/room.entity';
 import {CreateRoomDto} from '../../rooms/dto/room.dto';
+import {Service} from '../../services/service.entity';
+import {ServiceDto} from '../../services/dto/service.dto';
 
 export class CreateTourDto {
 
@@ -31,10 +33,11 @@ export class CreateTourDto {
     @ApiModelProperty({type: [CreateRoomDto]})
     readonly rooms: Room[];
 
+    @Type(() => Service)
     @IsArray()
     @IsNotEmpty()
-    @ApiModelProperty()
-    readonly services: string[];
+    @ApiModelProperty({type: [ServiceDto]})
+    readonly services: Service[];
 
     @IsNumber()
     @Min(1)
