@@ -27,7 +27,7 @@ export class Tour {
     @OneToMany( type => Room, room => room.tour, { cascade: true })
     rooms: Room[];
 
-    @ManyToMany(type => Service, service => service.tours, { cascade: true })
+    @ManyToMany(type => Service, service => service.tours)
     @JoinTable()
     services: Service[];
 }

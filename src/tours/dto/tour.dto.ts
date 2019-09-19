@@ -66,4 +66,16 @@ export class UpdateTourDto {
     @IsOptional()
     @ApiModelProperty()
     readonly description: string;
+
+    @Type(() => Room)
+    @IsArray()
+    @IsOptional()
+    @ApiModelProperty({type: [CreateRoomDto]})
+    readonly rooms: Room[];
+
+    @Type(() => Service)
+    @IsArray()
+    @IsOptional()
+    @ApiModelProperty({type: [ServiceDto]})
+    readonly services: Service[];
 }

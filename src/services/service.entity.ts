@@ -9,6 +9,6 @@ export class Service {
     @Column({ length: 50 })
     service: string;
 
-    @ManyToMany(type => Tour, tour => tour.services, {onDelete: 'CASCADE'})
+    @ManyToMany(type => Tour, tour => tour.services, {onDelete: 'CASCADE', onUpdate: 'CASCADE'})
     tours: Tour[];
 }

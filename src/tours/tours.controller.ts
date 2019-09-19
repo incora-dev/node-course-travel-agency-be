@@ -52,11 +52,16 @@ export class ToursController {
     }
 
     @Put(':id')
+    @UseGuards(AuthGuard('jwt'))
+    @ApiBearerAuth()
     @ApiImplicitParam({ name: 'id', type: Number })
     @ApiResponse({ status: 200, description: 'Tour has been successfully updated ```updated Tour()```' })
     @ApiResponse({ status: 400, description: 'Error Exception ```{ statusCode: 400, message: "Bad request" }```' })
+    @ApiResponse({ status: 400, description: 'Error Exception ```{ statusCode: 400, message: "Services and Rooms array can`t be empty" }```' })
+    @ApiResponse({ status: 401, description: 'Error Exception ```{ statusCode: 401, message: "Unauthorized" }```' })
+    @ApiResponse({ status: 403, description: 'Error Exception```{ statusCode: 403, message: "Forbidden"}```' })
     @ApiResponse({ status: 404, description: 'Error Exception ```{ statusCode: 404, message: "Not found" }```' })
-    update(@Param() params, @Body() tour: UpdateTourDto): Promise<ITour> {
-        return this.toursService.update(params.id, tour);
+    update(@Param() params, @Body() tour: UpdateTourDto, @Request() req): Promise<ITour> {
+        return this.toursService.update(params.id, tour, req.user.userId);
     }
 }

@@ -5,6 +5,7 @@ import {ITour} from './interface/tour.interface';
 import {CreateTourDto, UpdateTourDto} from './dto/tour.dto';
 import {Service} from '../services/service.entity';
 import {Hotel} from '../hotel/hotel.entity';
+import {Room} from '../rooms/room.entity';
 
 @Injectable()
 export class ToursService {
@@ -15,6 +16,8 @@ export class ToursService {
         private readonly serviceRepository: Repository<Service>,
         @Inject('HOTEL_REPOSITORY')
         private readonly hotelRepository: Repository<Hotel>,
+        @Inject('ROOM_REPOSITORY')
+        private readonly roomRepository: Repository<Room>,
     ) {}
 
     async getOneByParams(params: object): Promise<ITour> {
@@ -59,7 +62,16 @@ export class ToursService {
         return await this.tourRepository.remove(tour);
     }
 
-    async update(id: number, data: UpdateTourDto ): Promise<ITour> {
-        return await this.tourRepository.save({ ...data, id: Number(id) });
+    async update(id: number, data: UpdateTourDto, userId: number): Promise<ITour> {
+        const tour = await this.tourRepository.findOne(id);
+        const hotel = await this.hotelRepository.findOne(tour.hotelId, {relations: [ 'company' ]});
+        if (hotel.company.ownerId !== userId) {
+            throw new HttpException('Forbidden', HttpStatus.FORBIDDEN);
+        } else if ((data.services && data.services.length < 1) || (data.rooms && data.rooms.length < 1)) {
+            throw new HttpException('Services and Rooms array can`t be empty', HttpStatus.BAD_REQUEST);
+        }
+        const result = await this.tourRepository.save({ ...data, id: Number(id) });
+        await this.roomRepository.remove( await this.roomRepository.find({where: {tourId: null}}));
+        return result;
     }
 }
