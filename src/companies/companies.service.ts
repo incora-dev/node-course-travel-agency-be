@@ -40,6 +40,30 @@ export class CompaniesService {
     }
 
     async updateCompany(id: number, data: UpdateCompanyDto ): Promise<ICompany> {
+        const company = await this.getOneByParams({id: Number(id)});
+        if (data.address1 === null) {
+            throw new HttpException('First address can`t delete', HttpStatus.CONFLICT);
+        }
+        await this.validateAddressCorrectness(data.address1);
+        if (data.address2 === null) {
+            await this.addressRepository.remove(company.address2);
+        } else if (company.address2) {
+            await this.validateAddressCorrectness(data.address2);
+        }
         return await this.companyRepository.save({ ...data, id: Number(id) });
+    }
+
+    async validateAddressCorrectness(address): Promise<void> {
+        if (address) {
+            if (!address.id) {
+                throw new HttpException('Address don`t have id', HttpStatus.BAD_REQUEST);
+            } else {
+                const newAddress = new Address();
+                delete Object.assign(newAddress, address).id;
+                if (await this.addressRepository.findOne(newAddress)) {
+                    throw new HttpException('Address already exists, change address!', HttpStatus.CONFLICT);
+                }
+            }
+        }
     }
 }
