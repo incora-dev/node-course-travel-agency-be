@@ -1,8 +1,9 @@
-import {Controller, Get, Param, Post, Body, Delete, Put} from '@nestjs/common';
-import {ApiUseTags, ApiImplicitParam, ApiResponse} from '@nestjs/swagger';
+import {Controller, Get, Param, Post, Body, Delete, Put, UseGuards, Request} from '@nestjs/common';
+import {ApiUseTags, ApiImplicitParam, ApiResponse, ApiBearerAuth} from '@nestjs/swagger';
 import {ToursService} from './tours.service';
 import {ITour} from './interface/tour.interface';
 import {CreateTourDto, UpdateTourDto} from './dto/tour.dto';
+import {AuthGuard} from '@nestjs/passport';
 
 @ApiUseTags('tours')
 @Controller('tours')
@@ -18,12 +19,17 @@ export class ToursController {
     }
 
     @Post()
+    @UseGuards(AuthGuard('jwt'))
+    @ApiBearerAuth()
     @ApiResponse({ status: 201, description: 'Tour has been successfully created. ```new Tour()```' })
     @ApiResponse({ status: 400, description: 'Error Exception ```{ statusCode: 400, message: "Bad request" }```' })
+    @ApiResponse({ status: 400, description: 'Error Exception ```{ statusCode: 400, message: "Services and Rooms array can`t be empty" }```' })
+    @ApiResponse({ status: 400, description: 'Error Exception ```{ statusCode: 400, message: "Service id can`t be null" }```' })
+    @ApiResponse({ status: 401, description: 'Error Exception ```{ statusCode: 401, message: "Unauthorized" }```' })
+    @ApiResponse({ status: 403, description: 'Error Exception```{ statusCode: 403, message: "Forbidden"}```' })
     @ApiResponse({ status: 404, description: 'Error Exception ```{ statusCode: 404, message: "Hotel not found" }```' })
-    @ApiResponse({ status: 404, description: 'Error Exception ```{ statusCode: 404, message: "Service not found" }```' })
-    async create(@Body() tour: CreateTourDto): Promise<ITour> {
-        return await this.toursService.createTour(tour);
+    async create(@Body() tour: CreateTourDto,  @Request() req): Promise<ITour> {
+        return await this.toursService.createTour(tour, req.user.userId);
     }
 
     @Get()

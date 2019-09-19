@@ -21,26 +21,23 @@ export class ToursService {
         return await this.tourRepository.findOne(params, {relations: ['rooms', 'services']});
     }
 
-    async createTour(tour: CreateTourDto): Promise<ITour> {
-        const hotel = await this.hotelRepository.findOne(tour.hotelId);
+    async createTour(tour: CreateTourDto, userId: number): Promise<ITour> {
+        const hotel = await this.hotelRepository.findOne(tour.hotelId, {relations: [ 'company' ]});
         if (!hotel) {
             throw new HttpException('Hotel not found', HttpStatus.NOT_FOUND);
+        } else if (hotel.company.ownerId !== userId) {
+            throw new HttpException('Forbidden', HttpStatus.FORBIDDEN);
         }
-        const services = await Promise.all(tour.services.map(async (serviceName) => {
-            const service = await this.serviceRepository.findOne({service: serviceName});
-            if (!service) {
-                throw new HttpException('Service not found', HttpStatus.NOT_FOUND);
-            }
-            return service;
-        }));
-        const newTour = new Tour();
-        newTour.startDate = tour.startDate;
-        newTour.endDate = tour.endDate;
-        newTour.description = tour.description;
-        newTour.services = services;
-        newTour.rooms = tour.rooms;
-        newTour.hotel = hotel;
-        return await this.tourRepository.save(newTour);
+        if (tour.services.length < 1 || tour.rooms.length < 1) {
+            throw new HttpException('Services and Rooms array can`t be empty', HttpStatus.BAD_REQUEST);
+        } else {
+            tour.services.forEach((service) => {
+                if ( !service.id || service.id === 0) {
+                    throw new HttpException('Service id can`t be null', HttpStatus.BAD_REQUEST);
+                }
+            });
+        }
+        return await this.tourRepository.save(tour);
     }
 
     async getAll(): Promise<ITour[]> {
