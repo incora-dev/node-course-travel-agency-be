@@ -1,4 +1,4 @@
-import { IsString, IsNumber, IsOptional } from 'class-validator';
+import { IsString, IsOptional } from 'class-validator';
 import { ApiModelProperty } from '@nestjs/swagger';
 
 export class AddressDTO {
@@ -17,10 +17,6 @@ export class AddressDTO {
     @IsString()
     @ApiModelProperty()
     readonly street: string;
-
-    @IsNumber()
-    @ApiModelProperty()
-    readonly zip: number;
 }
 
 export class UpdateAddressDTO {
@@ -43,9 +39,4 @@ export class UpdateAddressDTO {
     @IsString()
     @ApiModelProperty()
     readonly street?: string;
-
-    @IsOptional()
-    @IsNumber()
-    @ApiModelProperty()
-    readonly zip?: number;
 }

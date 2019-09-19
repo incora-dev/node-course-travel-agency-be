@@ -18,13 +18,13 @@ export class HotelService {
         return await this.hotelRepository.findOne(params);
     }
 
-    async create(hotel: HotelDTO): Promise<IHotel> {
+    async create(hotel: HotelDTO, companyId: number): Promise<IHotel> {
         const name = hotel.name;
         const hotelFromDB = await this.getOneByParams({name});
         if (hotelFromDB) {
             throw new HttpException('Hotel exists!', 400);
         }
-        return await this.hotelRepository.save(hotel);
+        return await this.hotelRepository.save({...hotel, companyId: Number(companyId)});
     }
     async update(id: number, hotel: UpdateHotelDTO): Promise<IHotel> {
         return await this.hotelRepository.save({...hotel, id: Number(id)});
