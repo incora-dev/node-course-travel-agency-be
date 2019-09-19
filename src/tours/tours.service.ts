@@ -40,8 +40,14 @@ export class ToursService {
         return await this.tourRepository.save(tour);
     }
 
-    async getAll(): Promise<ITour[]> {
-        return await this.tourRepository.find({relations: ['rooms', 'services']});
+    async getAll(page: number, limit: number): Promise<Object> {
+        const tours = await this.tourRepository.findAndCount({skip: limit * ( page - 1 ), take: limit});
+        return {
+            items: tours[0],
+            itemsCount: tours[0].length,
+            page: Number(page),
+            maxPage: Math.ceil(tours[1] / limit),
+        };
     }
 
     async deleteById(id: number, userId: number): Promise<ITour> {

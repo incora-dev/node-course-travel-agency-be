@@ -32,10 +32,11 @@ export class ToursController {
         return await this.toursService.createTour(tour, req.user.userId);
     }
 
-    @Get()
+    @Get('page/:number')
+    @ApiImplicitParam({ name: 'number', type: Number })
     @ApiResponse({ status: 200, description: 'Success ```List of Tours```'})
-    getAll(): Promise<ITour[]> {
-        return this.toursService.getAll();
+    getAll(@Param('number') page: number): Promise<Object> {
+        return this.toursService.getAll(page, 10);
     }
 
     @Delete(':id')
