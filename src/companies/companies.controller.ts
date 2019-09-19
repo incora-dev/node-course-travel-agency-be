@@ -61,10 +61,16 @@ export class CompaniesController {
     }
 
     @Delete(':id')
+    @UseGuards(AuthGuard('jwt'))
+    @ApiBearerAuth()
     @ApiImplicitParam({ name: 'id', type: Number })
     @ApiResponse({ status: 200, description: 'Company Object ```deleted Company()```' })
     @ApiResponse({ status: 404, description: 'Error Exception ```{ statusCode: 404, message: "Not found" }```' })
-    deleteCompanyById(@Param() params): Promise<ICompany> {
+    async deleteCompanyById(@Param() params, @Request() req): Promise<ICompany> {
+        const checkCompanyByOwner = await this.companiesService.getOneByParams({ id: Number(params.id) });
+        if (checkCompanyByOwner.ownerId !== req.user.userId) {
+            throw new HttpException('Forbidden', HttpStatus.FORBIDDEN);
+        }
         return this.companiesService.deleteCompanyById(params.id);
     }
 

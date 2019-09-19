@@ -31,7 +31,12 @@ export class CompaniesService {
     }
 
     async deleteCompanyById(id: number): Promise<ICompany> {
-        return await this.companyRepository.remove( await this.companyRepository.findOne(id));
+        const companyToDelete = await this.companyRepository.findOne(id, {relations: ['address1', 'address2']});
+        await this.addressRepository.remove(companyToDelete.address1);
+        if (companyToDelete.address2) {
+            await this.addressRepository.remove( companyToDelete.address2);
+        }
+        return companyToDelete;
     }
 
     async updateCompany(id: number, data: UpdateCompanyDto ): Promise<ICompany> {

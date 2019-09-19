@@ -14,7 +14,7 @@ export class Company {
     @Column({ length: 50 })
     name: string;
 
-    @OneToOne(type => Address, {cascade: true})
+    @OneToOne(type => Address, {cascade: true, onDelete: 'CASCADE'})
     @JoinColumn()
     address1: Address;
 
