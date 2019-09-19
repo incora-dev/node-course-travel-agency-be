@@ -11,10 +11,11 @@ import { ServicesModule } from './services/services.module';
 import { AddressModule } from './address/address.module';
 import { RatingModule } from './rating/rating.module';
 import { ImageModule } from './image/image.module';
+import { LocationModule } from './location/location.module';
 
 @Module({
   imports: [UsersModule, AuthModule, ToursModule, CompaniesModule, HotelModule, RoomsModule,
-  ServicesModule, AddressModule, RatingModule, ImageModule],
+  ServicesModule, AddressModule, RatingModule, ImageModule, LocationModule],
   controllers: [AppController],
   providers: [AppService],
 })

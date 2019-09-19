@@ -38,7 +38,7 @@ export class HotelController {
             .select()
             .where('company.ownerId = :id', { id: Number(UserId) })
             .getRawOne();
-        if(!isUserHaveCompany){
+        if (!isUserHaveCompany) {
             throw new HttpException('Not found', 404);
         }
         return await this.hotelService.create(hotel, isUserHaveCompany.company_id);
