@@ -6,6 +6,7 @@ import {tourProviders} from './tour.providers';
 import {TourIsExistMiddleware} from '../middlewares/tour.isExist.middleware';
 import {serviceProviders} from '../services/service.providers';
 import {hotelProviders} from '../hotel/hotel.providers';
+import {roomProviders} from '../rooms/room.providers';
 
 @Module({
   imports: [DatabaseModule],
@@ -14,6 +15,7 @@ import {hotelProviders} from '../hotel/hotel.providers';
       ...tourProviders,
       ...serviceProviders,
       ...hotelProviders,
+      ...roomProviders,
   ],
   controllers: [ToursController],
 })

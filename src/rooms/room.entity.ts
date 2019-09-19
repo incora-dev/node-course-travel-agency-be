@@ -17,6 +17,6 @@ export class Room {
     @JoinColumn({ name: 'tourId' })
     tour: Tour;
 
-    @Column({ nullable: false })
+    @Column({ nullable: true })
     tourId: number;
 }

@@ -5,6 +5,7 @@ import {ITour} from './interface/tour.interface';
 import {CreateTourDto, UpdateTourDto} from './dto/tour.dto';
 import {Service} from '../services/service.entity';
 import {Hotel} from '../hotel/hotel.entity';
+import {Room} from '../rooms/room.entity';
 
 @Injectable()
 export class ToursService {
@@ -15,43 +16,62 @@ export class ToursService {
         private readonly serviceRepository: Repository<Service>,
         @Inject('HOTEL_REPOSITORY')
         private readonly hotelRepository: Repository<Hotel>,
+        @Inject('ROOM_REPOSITORY')
+        private readonly roomRepository: Repository<Room>,
     ) {}
 
     async getOneByParams(params: object): Promise<ITour> {
         return await this.tourRepository.findOne(params, {relations: ['rooms', 'services']});
     }
 
-    async createTour(tour: CreateTourDto): Promise<ITour> {
-        const hotel = await this.hotelRepository.findOne(tour.hotelId);
+    async createTour(tour: CreateTourDto, userId: number): Promise<ITour> {
+        const hotel = await this.hotelRepository.findOne(tour.hotelId, {relations: [ 'company' ]});
         if (!hotel) {
             throw new HttpException('Hotel not found', HttpStatus.NOT_FOUND);
+        } else if (hotel.company.ownerId !== userId) {
+            throw new HttpException('Forbidden', HttpStatus.FORBIDDEN);
         }
-        const services = await Promise.all(tour.services.map(async (serviceName) => {
-            const service = await this.serviceRepository.findOne({service: serviceName});
-            if (!service) {
-                throw new HttpException('Service not found', HttpStatus.NOT_FOUND);
-            }
-            return service;
-        }));
-        const newTour = new Tour();
-        newTour.startDate = tour.startDate;
-        newTour.endDate = tour.endDate;
-        newTour.description = tour.description;
-        newTour.services = services;
-        newTour.rooms = tour.rooms;
-        newTour.hotel = hotel;
-        return await this.tourRepository.save(newTour);
+        if (tour.services.length < 1 || tour.rooms.length < 1) {
+            throw new HttpException('Services and Rooms array can`t be empty', HttpStatus.BAD_REQUEST);
+        } else {
+            tour.services.forEach((service) => {
+                if ( !service.id || service.id === 0) {
+                    throw new HttpException('Service id can`t be null', HttpStatus.BAD_REQUEST);
+                }
+            });
+        }
+        return await this.tourRepository.save(tour);
     }
 
-    async getAll(): Promise<ITour[]> {
-        return await this.tourRepository.find({relations: ['rooms', 'services']});
+    async getAll(page: number, limit: number): Promise<Object> {
+        const tours = await this.tourRepository.findAndCount({skip: limit * ( page - 1 ), take: limit});
+        return {
+            items: tours[0],
+            itemsCount: tours[0].length,
+            page: Number(page),
+            maxPage: Math.ceil(tours[1] / limit),
+        };
     }
 
-    async deleteById(id: number): Promise<ITour> {
-        return await this.tourRepository.remove( await this.tourRepository.findOne(id));
+    async deleteById(id: number, userId: number): Promise<ITour> {
+        const tour = await this.tourRepository.findOne(id);
+        const hotel = await this.hotelRepository.findOne( tour.hotelId, {relations: [ 'company' ]});
+        if (hotel.company.ownerId !== userId) {
+            throw new HttpException('Forbidden', HttpStatus.FORBIDDEN);
+        }
+        return await this.tourRepository.remove(tour);
     }
 
-    async update(id: number, data: UpdateTourDto ): Promise<ITour> {
-        return await this.tourRepository.save({ ...data, id: Number(id) });
+    async update(id: number, data: UpdateTourDto, userId: number): Promise<ITour> {
+        const tour = await this.tourRepository.findOne(id);
+        const hotel = await this.hotelRepository.findOne(tour.hotelId, {relations: [ 'company' ]});
+        if (hotel.company.ownerId !== userId) {
+            throw new HttpException('Forbidden', HttpStatus.FORBIDDEN);
+        } else if ((data.services && data.services.length < 1) || (data.rooms && data.rooms.length < 1)) {
+            throw new HttpException('Services and Rooms array can`t be empty', HttpStatus.BAD_REQUEST);
+        }
+        const result = await this.tourRepository.save({ ...data, id: Number(id) });
+        await this.roomRepository.remove( await this.roomRepository.find({where: {tourId: null}}));
+        return result;
     }
 }

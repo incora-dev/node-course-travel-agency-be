@@ -14,12 +14,6 @@ export class CreateRoomDto {
     @IsNotEmpty()
     @ApiModelProperty({ enum: ['ECONOM', 'LUX', 'STANDARD']})
     readonly roomType: RoomType;
-
-    @IsNumber()
-    @Min(1)
-    @IsNotEmpty()
-    @ApiModelProperty()
-    readonly tourId: number;
 }
 
 export class UpdateRoomDto {
