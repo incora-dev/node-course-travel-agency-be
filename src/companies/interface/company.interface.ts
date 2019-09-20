@@ -5,8 +5,7 @@ export interface ICompany {
     _id?: number;
     contactEmail: string;
     name: string;
-    address1: Address;
-    address2?: Address;
+    address: Address;
     owner?: User;
     ownerId?: number;
 }

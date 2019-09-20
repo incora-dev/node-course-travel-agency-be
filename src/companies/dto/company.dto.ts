@@ -20,12 +20,7 @@ export class CreateCompanyDto {
     @Type(() => Address)
     @IsNotEmpty()
     @ApiModelProperty({type: AddressDTO})
-    readonly address1: Address;
-
-    @Type(() => Address)
-    @IsOptional()
-    @ApiModelProperty({type: AddressDTO})
-    readonly address2?: Address;
+    readonly address: Address;
 }
 
 export class UpdateCompanyDto {
@@ -44,10 +39,5 @@ export class UpdateCompanyDto {
     @Type(() => Address)
     @IsOptional()
     @ApiModelProperty({type: AddressDTO})
-    readonly address1: Address;
-
-    @Type(() => Address)
-    @IsOptional()
-    @ApiModelProperty({type: AddressDTO})
-    readonly address2?: Address;
+    readonly address: Address;
 }

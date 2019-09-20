@@ -17,11 +17,7 @@ export class Company {
 
     @OneToOne(type => Address, {cascade: true, onDelete: 'CASCADE'})
     @JoinColumn()
-    address1: Address;
-
-    @OneToOne(type => Address, {cascade: true, nullable: true, onDelete: 'SET NULL'})
-    @JoinColumn()
-    address2?: Address;
+    address: Address;
 
     @OneToOne(type => User, user => user.company, {onDelete: 'CASCADE'})
     @JoinColumn({ name: 'ownerId' })
