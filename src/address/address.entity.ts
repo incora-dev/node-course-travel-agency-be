@@ -18,6 +18,15 @@ export class Address {
     @Column()
     street: string;
 
+    @Column()
+    address1: number;
+
+    @Column({nullable: true})
+    address2: number;
+
+    @Column()
+    zip: number;
+
     @Column({ nullable: true })
     locationId: number;
 
