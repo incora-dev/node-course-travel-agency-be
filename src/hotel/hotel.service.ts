@@ -17,7 +17,7 @@ export class HotelService {
     }
 
     async getOneByParams(params: object): Promise<Hotel> {
-        return await this.hotelRepository.findOne(params);
+        return await this.hotelRepository.findOne(params, {relations: ['images']});
     }
 
     async create(hotel: HotelDTO, companyId: number): Promise<IHotel> {

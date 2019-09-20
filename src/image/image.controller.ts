@@ -37,16 +37,16 @@ export class ImageController {
         return await this.imageService.create({image: String(file.filename), hotelId: Number(hotelId)});
     }
 
-    @Get(':imgpath')
-    @ApiImplicitParam({ name: 'imgpath', type: String })
+    @Get(':id')
+    @ApiImplicitParam({ name: 'id', type: Number })
     @ApiResponse({ status: 200, description: '```Ok```' })
     @ApiResponse({ status: 404, description: '```Not found```' })
-    async seeUploadedFile(@Param('imgpath') image, @Res() res) {
-        const imgIsExist = await this.imageService.getOneByParams({image: String(image)});
+    async seeUploadedFile(@Param('id') imageId, @Res() res) {
+        const imgIsExist = await this.imageService.getOneByParams({ id: Number(imageId) });
         if (!imgIsExist) {
             throw new HttpException('Not found', HttpStatus.NOT_FOUND);
         }
-        return await res.sendFile(image, { root: './files' });
+        return await res.sendFile(imgIsExist.image, { root: './files' });
     }
 
     @Delete(':id')
