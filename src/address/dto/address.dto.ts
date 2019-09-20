@@ -1,4 +1,4 @@
-import { IsString, IsOptional } from 'class-validator';
+import { IsString, IsOptional, IsNumber } from 'class-validator';
 import { ApiModelProperty } from '@nestjs/swagger';
 import { LocationDTO, UpdateLocationDTO } from '../../location/dto/location.dto';
 
@@ -18,6 +18,19 @@ export class AddressDTO {
     @IsString()
     @ApiModelProperty()
     readonly street: string;
+
+    @IsNumber()
+    @ApiModelProperty()
+    readonly address1: number;
+
+    @IsOptional()
+    @IsNumber()
+    @ApiModelProperty()
+    readonly address2?: number;
+
+    @IsNumber()
+    @ApiModelProperty()
+    readonly zip: number;
 
     @IsOptional()
     @ApiModelProperty()
@@ -47,6 +60,21 @@ export class UpdateAddressDTO {
     @IsString()
     @ApiModelProperty()
     readonly street?: string;
+
+    @IsOptional()
+    @IsNumber()
+    @ApiModelProperty()
+    readonly address1?: number;
+
+    @IsOptional()
+    @IsNumber()
+    @ApiModelProperty()
+    readonly address2?: number;
+
+    @IsOptional()
+    @IsNumber()
+    @ApiModelProperty()
+    readonly zip?: number;
 
     @IsOptional()
     @ApiModelProperty()
