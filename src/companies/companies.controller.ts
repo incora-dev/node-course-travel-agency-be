@@ -16,7 +16,6 @@ import {ApiResponse, ApiImplicitParam, ApiUseTags, ApiBearerAuth} from '@nestjs/
 import {CreateCompanyDto, UpdateCompanyDto} from './dto/company.dto';
 import {ICompany} from './interface/company.interface';
 import {AuthGuard} from '@nestjs/passport';
-import {Company} from './company.entity';
 
 @ApiUseTags('companies')
 @Controller('companies')
@@ -40,9 +39,10 @@ export class CompaniesController {
         } else if (checkCompanyByOwner) {
             throw new HttpException('Company with this owner already exist!', HttpStatus.CONFLICT);
         }
-        const newCompany = new Company();
-        Object.assign(newCompany, company);
-        newCompany.ownerId = req.user.userId;
+        const newCompany = {
+            ...company,
+            ownerId: req.user.userId,
+        };
         return await this.companiesService.createCompany(newCompany);
     }
 
