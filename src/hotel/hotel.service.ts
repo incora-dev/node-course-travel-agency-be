@@ -19,7 +19,7 @@ export class HotelService {
     }
 
     async getOneByParams(params: object): Promise<Hotel> {
-        return await this.hotelRepository.findOne(params, {relations: ['images']});
+        return await this.hotelRepository.findOne(params, {relations: ['images', 'company', 'address']});
     }
 
     async getAverage(hotelId: number): Promise<string> {
@@ -35,7 +35,8 @@ export class HotelService {
             .where('rating.hotelId = :id', { id: hotelId })
             .getRawOne();
 
-        const res = sum / count;
+        let res = sum / count;
+        if(isNaN(res)){res = 0;}
         return String(res.toFixed(1));
     }
     async updateRating(id: number, averageRating: string): Promise<{ id: number, averageRating: string }> {
