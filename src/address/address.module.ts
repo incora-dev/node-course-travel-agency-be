@@ -9,6 +9,7 @@ import { AddressIsExistMiddleware } from '../middlewares/address.IsExist.middlew
   imports: [DatabaseModule],
   controllers: [AddressController],
   providers: [AddressService, ...addressProviders],
+  exports: [AddressService],
 })
 export class AddressModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
