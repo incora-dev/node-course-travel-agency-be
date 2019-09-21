@@ -19,6 +19,9 @@ export class Hotel {
     @Column()
     phone: string;
 
+    @Column()
+    averageRating: string;
+
     @OneToMany(type => Rating, rating => rating.hotel)
     rating: Rating[];
 
