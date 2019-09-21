@@ -15,9 +15,6 @@ export class CompaniesService {
     ) { }
 
     async createCompany(company: ICompany): Promise<ICompany> {
-        if ( await this.addressRepository.findOne(company.address) ) {
-            throw new HttpException('Address already exists!', HttpStatus.CONFLICT);
-        }
         return await this.companyRepository.save(company);
     }
 
@@ -36,21 +33,21 @@ export class CompaniesService {
     }
 
     async updateCompany(id: number, data: UpdateCompanyDto ): Promise<ICompany> {
-        await this.validateAddressCorrectness(data.address);
         return await this.companyRepository.save({ ...data, id: Number(id) });
     }
 
-    async validateAddressCorrectness(address): Promise<void> {
-        if (address) {
-            if (!address.id) {
-                throw new HttpException('Address don`t have id', HttpStatus.BAD_REQUEST);
-            } else {
-                const newAddress = new Address();
-                delete Object.assign(newAddress, address).id;
-                if (await this.addressRepository.findOne(newAddress)) {
-                    throw new HttpException('Address already exists, change address!', HttpStatus.CONFLICT);
-                }
-            }
-        }
+    async checkCompanyByOwner(companyId, ownerId): Promise<void> {
+        const company = await this.companyRepository.findOne({ id: Number(companyId) });
+        if ( company.ownerId !== ownerId ) { throw new HttpException('Forbidden', HttpStatus.FORBIDDEN); }
+    }
+
+    async checkCompanyByEmail(contactEmail): Promise<void> {
+        const company = await this.companyRepository.findOne({ where: {contactEmail}});
+        if ( company ) { throw new HttpException('Company with this email already exist!', HttpStatus.CONFLICT); }
+    }
+
+    async checkIfUserHaveCompany(userId): Promise<void> {
+        const company = await this.companyRepository.findOne({ where: {ownerId: userId}});
+        if ( company ) { throw new HttpException('Company with this owner already exist!', HttpStatus.CONFLICT); }
     }
 }
