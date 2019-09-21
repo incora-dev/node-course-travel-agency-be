@@ -22,7 +22,9 @@ export class HotelController {
     @ApiResponse({ status: 200, description: '```Ok```' })
     @ApiResponse({ status: 404, description: '```Not found```' })
     async getOne(@Param('id') id: number): Promise<IHotel> {
-        return await this.hotelService.getOneByParams({id});
+        const averageRating = await this.hotelService.getAverage(id);
+        await this.hotelService.updateRating(id, averageRating);
+        return await this.hotelService.getOneByParams({ id });
     }
 
     @Post()
