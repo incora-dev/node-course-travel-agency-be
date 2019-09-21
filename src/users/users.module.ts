@@ -4,9 +4,10 @@ import {UsersService} from './users.service';
 import {DatabaseModule} from '../core/database.module';
 import {userProviders} from './user.providers';
 import {UserIsExistMiddleware} from '../middlewares/user.isExist.middleware';
+import {CompaniesModule} from '../companies/companies.module';
 
 @Module({
-  imports: [DatabaseModule],
+  imports: [DatabaseModule, CompaniesModule],
   controllers: [UsersController],
   providers: [...userProviders, UsersService],
   exports: [UsersService],
