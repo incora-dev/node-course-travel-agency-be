@@ -1,6 +1,7 @@
-import { Controller, Get, Post, UseInterceptors, UploadedFile, Param, Res, Delete, HttpException, HttpStatus, Body } from '@nestjs/common';
+import { Controller, Get, Post, UseInterceptors, UploadedFile, Param, Res, Delete,
+         HttpException, HttpStatus, UploadedFiles } from '@nestjs/common';
 import { ImageService } from './image.service';
-import { FileInterceptor } from '@nestjs/platform-express';
+import { FileInterceptor, FilesInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import { IImage } from './interface/image.interface';
 import { ApiResponse, ApiUseTags, ApiConsumes, ApiImplicitFile, ApiImplicitParam } from '@nestjs/swagger';
@@ -35,6 +36,46 @@ export class ImageController {
     )
     async uploadedFile(@UploadedFile() file, @Param('hotelId') hotelId: number) {
         return await this.imageService.create({image: String(file.filename), hotelId: Number(hotelId)});
+    }
+
+    @Post('multiple/:hotelId')
+    @ApiImplicitFile({ name: 'file', required: true })
+    @ApiConsumes('multipart/form-data')
+    @ApiResponse({ status: 201, description: '```Created ```' })
+    @ApiResponse({ status: 403, description: '```Forbidden``` Only image files are allowed!' })
+    @ApiResponse({ status: 404, description: '```Not found ``` Hotel with this id not found' })
+    @UseInterceptors(
+        FilesInterceptor('file', 5, {
+            storage: diskStorage({
+                destination: './files',
+                filename: (req, file, callback) => {
+                    const filename = file.originalname.replace(/ +?/g, '_');
+                    callback(null, `${filename}`);
+                },
+            }),
+            fileFilter: (req, file, callback) => {
+                if (!file.originalname.match(/\.(jpg|jpeg|png|gif)$/)) {
+                    return callback(new HttpException('Only image files are allowed!', 403), false);
+                }
+                callback(null, true);
+            },
+        }),
+    )
+    async uploadMultipleFiles(@UploadedFiles() files, @Param('hotelId') hotelId: number) {
+        const arr = files.map(async file => {
+            const responseObj = await this.imageService.create({ image: String(file.filename), hotelId: Number(hotelId) })
+                .then(result => {
+                    const fileResponse = {
+                        id: result.id,
+                        originalname: file.originalname,
+                        filename: file.filename,
+                    };
+                    return fileResponse;
+                });
+            return responseObj;
+        });
+        const results = await Promise.all(arr);
+        return results;
     }
 
     @Get(':id')
