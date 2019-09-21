@@ -1,15 +1,20 @@
-import {Controller, Post, Get, Body, Param, Delete, Put, HttpException, UseGuards} from '@nestjs/common';
+import {Controller, Post, Get, Body, Param, Delete, Put, HttpException, UseGuards, HttpStatus} from '@nestjs/common';
 import {AuthGuard} from '@nestjs/passport';
 import {RoleGuard} from '../auth/guards/role.guard';
 import {UsersService} from './users.service';
 import {IUser} from './interfaces/user.interface';
 import {ApiResponse, ApiImplicitParam, ApiBearerAuth, ApiUseTags} from '@nestjs/swagger';
 import {UserDTO, UpdateUserDTO} from './dto/user.dto';
+import {CompaniesService} from '../companies/companies.service';
+import {ICompany} from '../companies/interface/company.interface';
 
 @ApiUseTags('users')
 @Controller('users')
 export class UsersController {
-    constructor(private readonly usersService: UsersService) { }
+    constructor(
+        private readonly usersService: UsersService,
+        private readonly companiesService: CompaniesService,
+    ) { }
 
     @ApiBearerAuth()
     @UseGuards(AuthGuard('jwt')/*, RoleGuard*/)
@@ -45,6 +50,18 @@ export class UsersController {
     @ApiResponse({ status: 404, description: '```Not found```' })
     async getOneById(@Param('id') id: number): Promise<IUser> {
         return await this.usersService.getOneByParams({ id });
+    }
+
+    @Get(':id/company')
+    @ApiImplicitParam({ name: 'id', type: Number })
+    @ApiResponse({ status: 200, description: 'Company Object'})
+    @ApiResponse({ status: 404, description: 'Error Exception ```{ statusCode: 404, message: "Not found" }```' })
+    async getOneCompanyByUserId(@Param('id') id: number): Promise<ICompany> {
+        const company = await this.companiesService.getOneByParams({ ownerId: id });
+        if (!company) {
+            throw new HttpException('Not found', HttpStatus.NOT_FOUND);
+        }
+        return company;
     }
 
     @Post()
