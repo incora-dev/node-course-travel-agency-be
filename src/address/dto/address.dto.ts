@@ -19,14 +19,14 @@ export class AddressDTO {
     @ApiModelProperty()
     readonly street: string;
 
-    @IsNumber()
+    @IsString()
     @ApiModelProperty()
-    readonly address1: number;
+    readonly address1: string;
 
     @IsOptional()
-    @IsNumber()
+    @IsString()
     @ApiModelProperty()
-    readonly address2?: number;
+    readonly address2?: string;
 
     @IsNumber()
     @ApiModelProperty()
@@ -62,14 +62,14 @@ export class UpdateAddressDTO {
     readonly street?: string;
 
     @IsOptional()
-    @IsNumber()
+    @IsString()
     @ApiModelProperty()
-    readonly address1?: number;
+    readonly address1?: string;
 
     @IsOptional()
-    @IsNumber()
+    @IsString()
     @ApiModelProperty()
-    readonly address2?: number;
+    readonly address2?: string;
 
     @IsOptional()
     @IsNumber()

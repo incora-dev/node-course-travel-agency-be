@@ -19,10 +19,10 @@ export class Address {
     street: string;
 
     @Column()
-    address1: number;
+    address1: string;
 
     @Column({nullable: true})
-    address2: number;
+    address2: string;
 
     @Column()
     zip: number;
