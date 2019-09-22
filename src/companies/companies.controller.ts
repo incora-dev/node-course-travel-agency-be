@@ -15,6 +15,7 @@ import {CreateCompanyDto, UpdateCompanyDto} from './dto/company.dto';
 import {ICompany} from './interface/company.interface';
 import {AuthGuard} from '@nestjs/passport';
 import {AddressService} from '../address/address.service';
+import {responseConstants} from '../constants/responseConstants';
 
 @ApiUseTags('companies')
 @Controller('companies')
@@ -47,7 +48,7 @@ export class CompaniesController {
         if ( companyFromDB ) {
             return {
                 statusCode: 201,
-                message: 'Create was successful',
+                message: responseConstants.createSuccess,
                 companyId: companyFromDB.id,
             };
         }
@@ -80,7 +81,7 @@ export class CompaniesController {
         if (await this.companiesService.deleteCompanyById(params.id)) {
             return {
                 statusCode: 200,
-                message: 'Delete was successful',
+                message: responseConstants.deleteSuccess,
             };
         }
     }
@@ -108,7 +109,7 @@ export class CompaniesController {
         if (await this.companiesService.updateCompany(params.id, company) ) {
             return {
                 statusCode: 200,
-                message: 'Update was successful',
+                message: responseConstants.updateSuccess,
             };
         }
     }

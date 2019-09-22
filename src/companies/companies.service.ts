@@ -4,6 +4,7 @@ import {Company} from './company.entity';
 import {ICompany} from './interface/company.interface';
 import {UpdateCompanyDto} from './dto/company.dto';
 import {Address} from '../address/address.entity';
+import {responseConstants} from '../constants/responseConstants';
 
 @Injectable()
 export class CompaniesService {
@@ -38,16 +39,16 @@ export class CompaniesService {
 
     async checkCompanyByOwner(companyId, ownerId): Promise<void> {
         const company = await this.companyRepository.findOne({ id: Number(companyId) });
-        if ( company.ownerId !== ownerId ) { throw new HttpException('Forbidden', HttpStatus.FORBIDDEN); }
+        if ( company.ownerId !== ownerId ) { throw new HttpException(responseConstants.forbidden, HttpStatus.FORBIDDEN); }
     }
 
     async checkCompanyByEmail(contactEmail): Promise<void> {
         const company = await this.companyRepository.findOne({ where: {contactEmail}});
-        if ( company ) { throw new HttpException('Company with this email already exist!', HttpStatus.CONFLICT); }
+        if ( company ) { throw new HttpException(responseConstants.companyAlreadyExist, HttpStatus.CONFLICT); }
     }
 
     async checkIfUserHaveCompany(userId): Promise<void> {
         const company = await this.companyRepository.findOne({ where: {ownerId: userId}});
-        if ( company ) { throw new HttpException('Company with this owner already exist!', HttpStatus.CONFLICT); }
+        if ( company ) { throw new HttpException(responseConstants.ownerMustHaveOneCompany, HttpStatus.CONFLICT); }
     }
 }
