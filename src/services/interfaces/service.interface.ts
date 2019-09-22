@@ -1,4 +1,4 @@
 export interface IService {
-    _id?: number;
+    id?: number;
     service: string;
 }
