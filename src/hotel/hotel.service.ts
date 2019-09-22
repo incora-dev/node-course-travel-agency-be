@@ -7,6 +7,7 @@ import { Address } from '../address/address.entity';
 import { Location } from '../location/location.entity';
 import { Rating } from '../rating/rating.entity';
 import { responseConstants } from '../constants/responseConstants';
+import { Company } from '../companies/company.entity';
 
 @Injectable()
 export class HotelService {
@@ -90,5 +91,18 @@ export class HotelService {
             .execute();
 
         return temp;
+    }
+    async checkForOwner(hotelId:number, userId: number):Promise<boolean>{
+        const hotel = await this.getOneByParams({ id: Number(hotelId) });
+        const ownerId = await getRepository(Company)
+            .createQueryBuilder('company')
+            .select('company.ownerId')
+            .where('company.id = :id', { id: Number(hotel.companyId) })
+            .getRawOne();
+
+        if (userId !== Number(ownerId.company_ownerId)) {
+            return false;
+        }
+        return true;
     }
 }
