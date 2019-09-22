@@ -61,18 +61,12 @@ export class HotelController {
     @ApiResponse({ status: 401, description: '```Unauthorized```' })
     @ApiResponse({ status: 409, description: '```Conflict```' })
     async update(@Param('id') id: number, @Body() hotel: UpdateHotelDTO, @Request() req): Promise<Object> {
-        const UserId = Number(req.user.userId);
-        const Hotel = await this.hotelService.getOneByParams({ id: Number(id) });
-        const ownerId = await getRepository(Company)
-            .createQueryBuilder('company')
-            .select('company.ownerId')
-            .where('company.id = :id', { id: Number(Hotel.companyId) })
-            .getRawOne();
-
-        if (UserId !== Number(ownerId.company_ownerId)) {
-            throw new HttpException(responseConstants.notOwnerOfHotel, HttpStatus.CONFLICT);
-        }
-
+        await this.hotelService.checkForOwner(id, req.user.userId)
+            .then(res => {
+                if (!res) {
+                    throw new HttpException(responseConstants.notOwnerOfHotel, HttpStatus.CONFLICT);
+                }
+            })
         const res = await this.hotelService.update(id, hotel);
         if (res) {
             return {
@@ -90,18 +84,12 @@ export class HotelController {
     @ApiResponse({ status: 401, description: '```Unauthorized```' })
     @ApiResponse({ status: 409, description: '```Conflict```' })
     async delete(@Param('id') id: number, @Request() req): Promise<Object> {
-        const UserId = Number(req.user.userId);
-
-        const hotel = await this.hotelService.getOneByParams({ id: Number(id) });
-        const ownerId = await getRepository(Company)
-            .createQueryBuilder('company')
-            .select('company.ownerId')
-            .where('company.id = :id', { id: Number(hotel.companyId) })
-            .getRawOne();
-
-        if (UserId !== Number(ownerId.company_ownerId)) {
-            throw new HttpException(responseConstants.notOwnerOfHotel, HttpStatus.CONFLICT);
-        }
+        await this.hotelService.checkForOwner(id, req.user.userId)
+        .then(res => {
+            if(!res){
+                throw new HttpException(responseConstants.notOwnerOfHotel, HttpStatus.CONFLICT);
+            }
+        })
         const res = await this.hotelService.delete(id);
         if (res) {
             return {
