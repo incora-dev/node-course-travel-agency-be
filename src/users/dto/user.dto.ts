@@ -21,7 +21,7 @@ export class UpdateUserDTO {
     readonly lastName?: string;
 }
 
-export class UpdatePasswordDTO{
+export class UpdatePasswordDTO {
     @IsString()
     @IsNotEmpty()
     @ApiModelProperty()

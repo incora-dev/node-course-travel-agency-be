@@ -24,7 +24,7 @@ export class UsersService {
         return await this.userRepository.save({ ...data, id: Number(id) });
     }
 
-    async updatePassword(id: number, data: UpdatePasswordDTO): Promise<IUser>{
+    async updatePassword(id: number, data: UpdatePasswordDTO): Promise<IUser> {
     /*If user changes his password, we'll crypt it, before sending to DB */
         data.password = await bcrypt.hash(data.password, 10);
         return this.userRepository.save({ ...data, id: Number(id) });

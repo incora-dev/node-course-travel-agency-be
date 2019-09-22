@@ -1,4 +1,4 @@
-import { Injectable, Inject, HttpException } from '@nestjs/common';
+import { Injectable, Inject, HttpException, HttpStatus } from '@nestjs/common';
 import { Repository, getRepository, getConnection } from 'typeorm';
 import { Hotel } from './hotel.entity';
 import { IHotel } from './interfaces/hotel.interface';
@@ -6,7 +6,7 @@ import { HotelDTO, UpdateHotelDTO } from './dto/hotel.dto';
 import { Address } from '../address/address.entity';
 import { Location } from '../location/location.entity';
 import { Rating } from '../rating/rating.entity';
-import { numberLiteralTypeAnnotation } from '@babel/types';
+import { responseConstants } from '../constants/responseConstants';
 
 @Injectable()
 export class HotelService {
@@ -36,7 +36,7 @@ export class HotelService {
             .getRawOne();
 
         let res = sum / count;
-        if(isNaN(res)){res = 0;}
+        if (isNaN(res)) {res = 0; }
         return String(res.toFixed(1));
     }
     async updateRating(id: number, averageRating: string): Promise<{ id: number, averageRating: string }> {
@@ -47,7 +47,7 @@ export class HotelService {
         const name = hotel.name;
         const hotelFromDB = await this.getOneByParams({name});
         if (hotelFromDB) {
-            throw new HttpException('Hotel exists!', 400);
+            throw new HttpException(responseConstants.hotelAlreadyExists, HttpStatus.CONFLICT);
         }
         return await this.hotelRepository.save({...hotel, averageRating: '0', companyId: Number(companyId)});
     }
@@ -91,5 +91,4 @@ export class HotelService {
 
         return temp;
     }
-
 }
