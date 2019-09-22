@@ -5,12 +5,14 @@ import {DatabaseModule} from '../core/database.module';
 import {companyProviders} from './company.providers';
 import {CompanyIsExistMiddleware} from '../middlewares/company.isExist.middleware';
 import {AddressModule} from '../address/address.module';
+import {addressProviders} from '../address/address.providers';
 
 @Module({
   imports: [DatabaseModule, AddressModule],
   providers: [
       CompaniesService,
       ...companyProviders,
+      ...addressProviders,
   ],
   controllers: [CompaniesController],
   exports: [CompaniesService],
