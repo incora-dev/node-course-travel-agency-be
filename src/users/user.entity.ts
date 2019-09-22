@@ -1,7 +1,6 @@
 import { Column, Entity, PrimaryGeneratedColumn, BeforeInsert, OneToMany, OneToOne } from 'typeorm';
 import { Exclude } from 'class-transformer';
 import * as bcrypt from 'bcrypt';
-import { UserRole } from './enums/user-role.enum';
 import { Company } from '../companies/company.entity';
 import { Rating } from '../rating/rating.entity';
 
@@ -28,9 +27,6 @@ export class User {
     async hashPassword() {
         this.password = await bcrypt.hash(this.password, 10);
     }
-
-    /*@Column()
-    role: UserRole;*/
 
     @OneToOne(type => Company, company => company.owner)
     company: Company;

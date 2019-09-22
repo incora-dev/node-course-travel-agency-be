@@ -18,8 +18,9 @@ export class UsersModule implements NestModule {
             .apply(UserIsExistMiddleware)
             .forRoutes(
                 { path: 'users/:id', method: RequestMethod.GET },
-                    { path: 'users/:id', method: RequestMethod.PUT },
-                    { path: 'users/:id', method: RequestMethod.DELETE },
+                    //{ path: 'users', method: RequestMethod.PUT },
+                    //{ path: 'users/password', method: RequestMethod.PUT },
+                    //{ path: 'users', method: RequestMethod.DELETE },
                     );
     }
 }

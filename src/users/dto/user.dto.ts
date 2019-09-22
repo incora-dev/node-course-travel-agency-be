@@ -1,6 +1,5 @@
 import {ApiModelProperty} from '@nestjs/swagger';
-import {IsEmail, IsNotEmpty, IsString, MinLength, IsOptional, IsEnum} from 'class-validator';
-import { UserRole } from '../enums/user-role.enum';
+import {IsEmail, IsNotEmpty, IsString, IsOptional } from 'class-validator';
 
 export class UpdateUserDTO {
 
@@ -12,7 +11,6 @@ export class UpdateUserDTO {
 
     @IsOptional()
     @IsString()
-    @MinLength(3)
     @IsNotEmpty()
     @ApiModelProperty()
     readonly firstName?: string;
@@ -21,19 +19,13 @@ export class UpdateUserDTO {
     @IsString()
     @ApiModelProperty()
     readonly lastName?: string;
+}
 
-    @IsOptional()
+export class UpdatePasswordDTO{
     @IsString()
     @IsNotEmpty()
-    @MinLength(5)
     @ApiModelProperty()
-    password?: string;
-
-    /*@IsOptional()
-    @IsNotEmpty()
-    @IsEnum(UserRole)
-    @ApiModelProperty({ enum: ['ADMIN', 'USER'] })
-    role?: UserRole;*/
+    password: string;
 }
 
 export class UserDTO {
@@ -57,11 +49,6 @@ export class UserDTO {
     @IsNotEmpty()
     @ApiModelProperty()
     readonly password: string;
-
-    /*@IsNotEmpty()
-    @IsEnum(UserRole)
-    @ApiModelProperty({ enum: ['ADMIN', 'USER'] })
-    readonly role: UserRole;*/
 }
 
 export class UserLogin {

@@ -1,10 +1,9 @@
-import {Controller, Post, Get, Body, Param, Delete, Put, HttpException, UseGuards, HttpStatus} from '@nestjs/common';
+import {Controller, Post, Get, Body, Param, Delete, Put, HttpException, UseGuards, HttpStatus, Request} from '@nestjs/common';
 import {AuthGuard} from '@nestjs/passport';
-import {RoleGuard} from '../auth/guards/role.guard';
 import {UsersService} from './users.service';
 import {IUser} from './interfaces/user.interface';
 import {ApiResponse, ApiImplicitParam, ApiBearerAuth, ApiUseTags} from '@nestjs/swagger';
-import {UserDTO, UpdateUserDTO} from './dto/user.dto';
+import { UpdateUserDTO, UpdatePasswordDTO } from './dto/user.dto';
 import {CompaniesService} from '../companies/companies.service';
 import {ICompany} from '../companies/interface/company.interface';
 
@@ -16,15 +15,14 @@ export class UsersController {
         private readonly companiesService: CompaniesService,
     ) { }
 
+    @Delete()
     @ApiBearerAuth()
-    @UseGuards(AuthGuard('jwt')/*, RoleGuard*/)
-    @ApiImplicitParam({ name: 'id', type: Number })
+    @UseGuards(AuthGuard('jwt'))
     @ApiResponse({ status: 200, description: '```Ok``` Successfully removed' })
     @ApiResponse({ status: 404, description: '```Not Found```' })
     @ApiResponse({ status: 401, description: '```Unauthorized```' })
-    @Delete(':id')
-    async deleteUserById(@Param() params): Promise<IUser> {
-        return await this.usersService.deleteUserById(params.id);
+    async deleteUserById(@Request() req): Promise<IUser> {
+        return await this.usersService.deleteUserById(Number(req.user.userId));
     }
 
     @Get()
@@ -33,15 +31,24 @@ export class UsersController {
         return await this.usersService.getAllFromDB();
     }
 
+    @Put()
     @ApiBearerAuth()
     @UseGuards(AuthGuard('jwt'))
-    @ApiImplicitParam({ name: 'id', type: Number })
     @ApiResponse({ status: 200, description: '```Ok``` Successfully updated' })
     @ApiResponse({ status: 404, description: '```Not found```' })
     @ApiResponse({ status: 401, description: '```Unauthorized```' })
-    @Put(':id')
-    async updateUser(@Param() params, @Body() user: UpdateUserDTO): Promise<IUser> {
-        return await this.usersService.updateUser(params.id, user);
+    async updateUser(@Request() req, @Body() user: UpdateUserDTO): Promise<IUser> {
+        return await this.usersService.updateUser(Number(req.user.userId), user);
+    }
+
+    @Put('password')
+    @ApiBearerAuth()
+    @UseGuards(AuthGuard('jwt'))
+    @ApiResponse({ status: 200, description: '```Ok``` Successfully updated' })
+    @ApiResponse({ status: 404, description: '```Not found```' })
+    @ApiResponse({ status: 401, description: '```Unauthorized```' })
+    async updatePassword(@Request() req, @Body() password: UpdatePasswordDTO): Promise<IUser> {
+        return await this.usersService.updatePassword(Number(req.user.userId), password);
     }
 
     @Get(':id')
@@ -62,12 +69,5 @@ export class UsersController {
             throw new HttpException('Not found', HttpStatus.NOT_FOUND);
         }
         return company;
-    }
-
-    @Post()
-    @ApiResponse({ status: 201, description: '```Created ```' })
-    @ApiResponse({ status: 403, description: '```Forbidden``` User already exists' })
-    async add(@Body() user: UserDTO): Promise<IUser> {
-        return await this.usersService.addToDB(user);
     }
 }
