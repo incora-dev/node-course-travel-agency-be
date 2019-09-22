@@ -6,11 +6,13 @@ import {companyProviders} from './company.providers';
 import {CompanyIsExistMiddleware} from '../middlewares/company.isExist.middleware';
 import {AddressModule} from '../address/address.module';
 import {addressProviders} from '../address/address.providers';
+import {AddressService} from '../address/address.service';
 
 @Module({
   imports: [DatabaseModule, AddressModule],
   providers: [
       CompaniesService,
+      AddressService,
       ...companyProviders,
       ...addressProviders,
   ],

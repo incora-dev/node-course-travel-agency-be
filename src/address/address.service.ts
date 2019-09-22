@@ -1,4 +1,4 @@
-import { Injectable, Inject, HttpException } from '@nestjs/common';
+import {Injectable, Inject, HttpException, HttpStatus} from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { Address } from './address.entity';
 import { AddressDTO, UpdateAddressDTO } from './dto/address.dto';
@@ -37,5 +37,23 @@ export class AddressService {
 
     async getOneByParams(params: object): Promise<Address> {
         return await this.addressRepository.findOne(params);
+    }
+
+    async validateAddressCorrectness(address): Promise<void> {
+        if (address) {
+            if (!address.id) {
+                throw new HttpException('Address don`t have id', HttpStatus.BAD_REQUEST);
+            } else {
+                const newAddress = new Address();
+                delete Object.assign(newAddress, address).id;
+                await this.checkAddressIfExist(newAddress);
+            }
+        }
+    }
+
+    async checkAddressIfExist(address): Promise<void> {
+        if (await this.addressRepository.findOne(address)) {
+            throw new HttpException('Address already exists!', HttpStatus.CONFLICT);
+        }
     }
 }
