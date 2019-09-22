@@ -1,5 +1,5 @@
 export interface IHotel {
-    _id?: number;
+    id?: number;
     name: string;
     description: string;
     phone: string;
