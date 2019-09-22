@@ -31,12 +31,13 @@ export class ToursService {
     }
 
     async getAll(page: number, limit: number): Promise<Object> {
-        const tours = await this.tourRepository.findAndCount({skip: limit * ( page - 1 ), take: limit});
+        const tours = await this.tourRepository.findAndCount({skip: limit * page, take: limit});
         return {
             items: tours[0],
             itemsCount: tours[0].length,
+            total: tours[1],
             page: Number(page),
-            maxPage: Math.ceil(tours[1] / limit),
+            maxPage: Math.ceil(tours[1] / limit) - 1,
         };
     }
 

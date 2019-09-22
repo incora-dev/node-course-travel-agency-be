@@ -1,4 +1,4 @@
-import {Controller, Get, Param, Post, Body, Delete, Put, UseGuards, Request} from '@nestjs/common';
+import {Controller, Get, Param, Post, Body, Delete, Put, UseGuards, Request, Query} from '@nestjs/common';
 import {ApiUseTags, ApiImplicitParam, ApiResponse, ApiBearerAuth} from '@nestjs/swagger';
 import {ToursService} from './tours.service';
 import {ITour} from './interface/tour.interface';
@@ -45,11 +45,10 @@ export class ToursController {
         }
     }
 
-    @Get('page/:number')
-    @ApiImplicitParam({ name: 'number', type: Number })
+    @Get('')
     @ApiResponse({ status: 200, description: 'Success ```List of Tours```'})
-    getAll(@Param('number') page: number): Promise<Object> {
-        return this.toursService.getAll(page, 10);
+    getAll(@Query('page') page: number = 0, @Query('limit') limit: number = 10): Promise<Object> {
+        return this.toursService.getAll(page, limit);
     }
 
     @Delete(':id')
