@@ -48,7 +48,7 @@ export class HotelController {
             return {
                 statusCode: 201,
                 message: responseConstants.createSuccess,
-                hotelId: hotelFromDB.id,
+                objectId: hotelFromDB.id,
             };
         }
     }
@@ -66,9 +66,9 @@ export class HotelController {
                 if (!res) {
                     throw new HttpException(responseConstants.notOwnerOfHotel, HttpStatus.CONFLICT);
                 }
-            })
-        const res = await this.hotelService.update(id, hotel);
-        if (res) {
+            });
+        const result = await this.hotelService.update(id, hotel);
+        if (result) {
             return {
                 statusCode: 200,
                 message: responseConstants.updateSuccess,
@@ -86,12 +86,12 @@ export class HotelController {
     async delete(@Param('id') id: number, @Request() req): Promise<Object> {
         await this.hotelService.checkForOwner(id, req.user.userId)
         .then(res => {
-            if(!res){
+            if (!res) {
                 throw new HttpException(responseConstants.notOwnerOfHotel, HttpStatus.CONFLICT);
             }
-        })
-        const res = await this.hotelService.delete(id);
-        if (res) {
+        });
+        const result = await this.hotelService.delete(id);
+        if (result) {
             return {
                 statusCode: 200,
                 message: responseConstants.deleteSuccess,

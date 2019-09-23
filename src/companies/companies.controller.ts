@@ -49,7 +49,7 @@ export class CompaniesController {
             return {
                 statusCode: 201,
                 message: responseConstants.createSuccess,
-                companyId: companyFromDB.id,
+                objectId: companyFromDB.id,
             };
         }
     }
