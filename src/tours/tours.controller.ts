@@ -40,7 +40,7 @@ export class ToursController {
             return {
                 statusCode: 201,
                 message: responseConstants.createSuccess,
-                tourId: newTour.id,
+                objectId: newTour.id,
             };
         }
     }

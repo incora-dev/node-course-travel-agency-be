@@ -92,7 +92,7 @@ export class HotelService {
 
         return temp;
     }
-    async checkForOwner(hotelId:number, userId: number):Promise<boolean>{
+    async checkForOwner(hotelId: number, userId: number): Promise<boolean> {
         const hotel = await this.getOneByParams({ id: Number(hotelId) });
         const ownerId = await getRepository(Company)
             .createQueryBuilder('company')
