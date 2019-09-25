@@ -1,6 +1,6 @@
 export interface ILogin {
     access_token: string;
-    id: number;
+    objectId: number;
     status: number;
 }
 

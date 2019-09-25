@@ -18,13 +18,13 @@ export class Address {
     @Column()
     street: string;
 
-    @Column()
+    @Column({ nullable: true })
     address1: string;
 
     @Column({nullable: true})
     address2: string;
 
-    @Column()
+    @Column({ nullable: true })
     zip: number;
 
     @Column({ nullable: true })
