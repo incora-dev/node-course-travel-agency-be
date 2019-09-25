@@ -19,18 +19,20 @@ export class AddressDTO {
     @ApiModelProperty()
     readonly street: string;
 
+    @IsOptional()
     @IsString()
     @ApiModelProperty()
-    readonly address1: string;
+    readonly address1?: string;
 
     @IsOptional()
     @IsString()
     @ApiModelProperty()
     readonly address2?: string;
 
+    @IsOptional()
     @IsNumber()
     @ApiModelProperty()
-    readonly zip: number;
+    readonly zip?: number;
 
     @IsOptional()
     @ApiModelProperty()
