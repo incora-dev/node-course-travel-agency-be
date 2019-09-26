@@ -5,6 +5,7 @@ import {DatabaseModule} from '../../core/database.module';
 import {CompaniesSeederModule} from './companies/companiesSeeder.module';
 import {AddressesSeederModule} from './addresses/addressesSeeder.module';
 import {HotelsSeederModule} from './hotels/hotelsSeeder.module';
+import {ServicesSeederModule} from './services/servicesSeeder.module';
 
 @Module({
     imports: [
@@ -13,6 +14,7 @@ import {HotelsSeederModule} from './hotels/hotelsSeeder.module';
         CompaniesSeederModule,
         AddressesSeederModule,
         HotelsSeederModule,
+        ServicesSeederModule,
     ],
     providers: [Logger, Seeder],
 })

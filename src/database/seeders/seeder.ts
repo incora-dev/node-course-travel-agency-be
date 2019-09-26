@@ -3,6 +3,7 @@ import { UserSeederService } from './users/usersSeeder.service';
 import {CompaniesSeederService} from './companies/companiesSeeder.service';
 import {AddressesSeederService} from './addresses/addressesSeeder.service';
 import {HotelsSeederService} from './hotels/hotelsSeeder.service';
+import {ServicesSeederService} from './services/servicesSeeder.service';
 
 @Injectable()
 export class Seeder {
@@ -12,6 +13,7 @@ export class Seeder {
         private readonly companiesSeederService: CompaniesSeederService,
         private readonly addressesSeederService: AddressesSeederService,
         private readonly hotelsSeederService: HotelsSeederService,
+        private readonly servicesSeederService: ServicesSeederService,
     ) {}
 
     async seed() {
@@ -20,6 +22,7 @@ export class Seeder {
             const addressesCompleted = await this.addresses();
             const companiesCompleted = await this.companies();
             const hotelsCompleted = await this.hotels();
+            const servicesCompleted = await this.services();
 
             this.logger.debug('Successful completed seeding...');
 
@@ -90,6 +93,22 @@ export class Seeder {
             return true;
         } catch (err) {
             this.logger.error('Failed seeding hotel...', err.stack);
+            throw new InternalServerErrorException();
+        }
+    }
+
+    async services() {
+        try {
+            const createdPatterns = await Promise.all(this.servicesSeederService.create());
+
+            const createdPatternsNumb = createdPatterns.filter(
+                nullValueOrCreatedService => nullValueOrCreatedService,
+            ).length;
+
+            this.logger.debug(`Created ${createdPatternsNumb} service`);
+            return true;
+        } catch (err) {
+            this.logger.error('Failed seeding service...', err.stack);
             throw new InternalServerErrorException();
         }
     }
