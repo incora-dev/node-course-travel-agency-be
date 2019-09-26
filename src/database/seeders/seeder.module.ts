@@ -4,6 +4,7 @@ import { UserSeederModule } from './users/usersSeeder.module';
 import {DatabaseModule} from '../../core/database.module';
 import {CompaniesSeederModule} from './companies/companiesSeeder.module';
 import {AddressesSeederModule} from './addresses/addressesSeeder.module';
+import {HotelsSeederModule} from './hotels/hotelsSeeder.module';
 
 @Module({
     imports: [
@@ -11,6 +12,7 @@ import {AddressesSeederModule} from './addresses/addressesSeeder.module';
         UserSeederModule,
         CompaniesSeederModule,
         AddressesSeederModule,
+        HotelsSeederModule,
     ],
     providers: [Logger, Seeder],
 })

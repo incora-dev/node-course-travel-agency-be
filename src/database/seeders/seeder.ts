@@ -2,6 +2,7 @@ import { Injectable, Logger, InternalServerErrorException } from '@nestjs/common
 import { UserSeederService } from './users/usersSeeder.service';
 import {CompaniesSeederService} from './companies/companiesSeeder.service';
 import {AddressesSeederService} from './addresses/addressesSeeder.service';
+import {HotelsSeederService} from './hotels/hotelsSeeder.service';
 
 @Injectable()
 export class Seeder {
@@ -10,6 +11,7 @@ export class Seeder {
         private readonly userSeederService: UserSeederService,
         private readonly companiesSeederService: CompaniesSeederService,
         private readonly addressesSeederService: AddressesSeederService,
+        private readonly hotelsSeederService: HotelsSeederService,
     ) {}
 
     async seed() {
@@ -17,6 +19,7 @@ export class Seeder {
             const usersCompleted = await this.users();
             const addressesCompleted = await this.addresses();
             const companiesCompleted = await this.companies();
+            const hotelsCompleted = await this.hotels();
 
             this.logger.debug('Successful completed seeding...');
 
@@ -71,6 +74,22 @@ export class Seeder {
             return true;
         } catch (err) {
             this.logger.error('Failed seeding company...', err.stack);
+            throw new InternalServerErrorException();
+        }
+    }
+
+    async hotels() {
+        try {
+            const createdPatterns = await this.hotelsSeederService.create();
+
+            const createdPatternsNumb = createdPatterns.filter(
+                nullValueOrCreatedHotel => nullValueOrCreatedHotel,
+            ).length;
+
+            this.logger.debug(`Created ${createdPatternsNumb} hotel`);
+            return true;
+        } catch (err) {
+            this.logger.error('Failed seeding hotel...', err.stack);
             throw new InternalServerErrorException();
         }
     }
