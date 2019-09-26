@@ -14,11 +14,13 @@ export class AddressesSeederService {
 
     create(): Array<Promise<IAddress>> {
         return AddressesSeeds.map(async (address: AddressDTO) => {
-            const addressExist = await this.addressRepository.findOne(address);
+            const location = address.location;
+            delete address.location;
+            const addressExist = await this.addressRepository.findOne(address, {});
             if (addressExist) {
                 return null;
             }
-            return await this.addressRepository.save(address);
+            return await this.addressRepository.save({ ...address, location});
         });
     }
 }
