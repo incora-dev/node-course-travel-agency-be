@@ -17,8 +17,8 @@ export class AuthService {
     constructor(
         private readonly jwtService: JwtService,
         private readonly usersService: UsersService,
-        private readonly redisClient: redis.RedisClient
-    ) { this.redis = new Redis(redisClient) }
+        private readonly redisClient: redis.RedisClient,
+    ) { this.redis = new Redis(redisClient); }
 
     async getAllUserParamsFromDB(user: UserLogin): Promise<IUser> {
         const email = user.email;
@@ -55,7 +55,7 @@ export class AuthService {
     /*--- Jwt logout --- */
 
     async extractToken(req): Promise<string> {
-        const header = req.headers['authorization'];
+        const header = req.headers.authorization;
         if (typeof header !== undefined) {
             const bearer = header.split(' ');
             const token = bearer[1];

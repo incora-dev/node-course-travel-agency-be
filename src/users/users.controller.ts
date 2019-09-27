@@ -16,7 +16,7 @@ export class UsersController {
     constructor(
         private readonly usersService: UsersService,
         private readonly companiesService: CompaniesService,
-        private readonly authService: AuthService
+        private readonly authService: AuthService,
     ) { }
 
     @Delete()

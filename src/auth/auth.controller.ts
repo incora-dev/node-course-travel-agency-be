@@ -28,7 +28,7 @@ export class AuthController {
         return await this.authService.login(userTologin);
 
     }
-    
+
     @Get('logout')
     @ApiBearerAuth()
     @ApiResponse({ status: 401, description: '```Unauthorized```' })
@@ -37,8 +37,8 @@ export class AuthController {
     async logout(@Request() req) {
         const header = await this.authService.extractToken(req);
         await this.authService.logout(header);
-        //await req.logout();
-        //await res.redirect('/');
+        // await req.logout();
+        // await res.redirect('/');
         return {
             statusCode: 200,
             message: responseConstants.logoutSuccess,

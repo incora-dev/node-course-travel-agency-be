@@ -1,5 +1,4 @@
-import * as redis from "redis";
-
+import * as redis from 'redis';
 
 export default class Redis {
 
@@ -45,7 +44,7 @@ export default class Redis {
                     return reject(err);
                 }
                 return resolve(jsonDecode);
-            })
+            });
         });
     }
 }
