@@ -11,4 +11,5 @@ export const responseConstants = {
     arrayServiceOrRoomEmpty: 'Services and Rooms array can`t be empty',
     serviceIdCantBeNull: 'Service id can`t be null',
     notOwnerOfHotel: ' You are not owner of this hotel!',
+    logoutSuccess: 'Logout was successful!',
 };

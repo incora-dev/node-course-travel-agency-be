@@ -10,7 +10,7 @@ export class AddressService {
     private readonly addressRepository: Repository<Address>) {}
 
     async getAll(): Promise<Address[]> {
-        return this.addressRepository.find();
+        return this.addressRepository.find({relations: ['location']});
     }
 
     async create(address: AddressDTO): Promise<IAddress> {
