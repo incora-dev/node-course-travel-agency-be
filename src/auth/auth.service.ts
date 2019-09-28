@@ -7,13 +7,18 @@ import { IUser } from '../users/interfaces/user.interface';
 import { ILogin } from './interfaces/auth.interface';
 import { getRepository } from 'typeorm';
 import { User } from '../users/user.entity';
+import Redis from './redis/redis';
+import * as redis from 'redis';
+import { jwtConstants } from './constants';
 
 @Injectable()
 export class AuthService {
+    private readonly redis: Redis;
     constructor(
         private readonly jwtService: JwtService,
         private readonly usersService: UsersService,
-    ) { }
+        private readonly redisClient: redis.RedisClient,
+    ) { this.redis = new Redis(redisClient); }
 
     async getAllUserParamsFromDB(user: UserLogin): Promise<IUser> {
         const email = user.email;
@@ -45,6 +50,28 @@ export class AuthService {
             objectId: user.id,
             status: 200,
         };
+    }
+
+    /*--- Jwt logout --- */
+
+    async extractToken(req): Promise<string> {
+        const header = req.headers.authorization;
+        if (typeof header !== undefined) {
+            const bearer = header.split(' ');
+            const token = bearer[1];
+            return String(token);
+        }
+    }
+    async compareKey(firstKey: string): Promise<boolean> {
+        const findKeyInRedis = await this.redis.get(firstKey);
+        if (findKeyInRedis == null) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+    async logout(token: string) {
+        await this.redis.setExp(token, 'true', 'EX', jwtConstants.redisKeyExpirationTime);
     }
 
 }
