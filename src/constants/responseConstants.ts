@@ -12,4 +12,5 @@ export const responseConstants = {
     serviceIdCantBeNull: 'Service id can`t be null',
     notOwnerOfHotel: ' You are not owner of this hotel!',
     logoutSuccess: 'Logout was successful!',
+    ok: 'Ok!',
 };
