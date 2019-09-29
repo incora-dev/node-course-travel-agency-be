@@ -7,9 +7,10 @@ import {CompanyIsExistMiddleware} from '../middlewares/company.isExist.middlewar
 import {AddressModule} from '../address/address.module';
 import {addressProviders} from '../address/address.providers';
 import {AddressService} from '../address/address.service';
+import { AuthModule } from '../auth/auth.module';
 
 @Module({
-  imports: [DatabaseModule, AddressModule],
+  imports: [DatabaseModule, AddressModule, AuthModule],
   providers: [
       CompaniesService,
       AddressService,

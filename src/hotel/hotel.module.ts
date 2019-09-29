@@ -4,9 +4,10 @@ import { HotelService } from './hotel.service';
 import { hotelProviders } from './hotel.providers';
 import { DatabaseModule } from '../core/database.module';
 import { HotelIsExistMiddleware } from '../middlewares/hotel.isExist.middleware';
+import { AuthModule } from '../auth/auth.module';
 
 @Module({
-  imports: [DatabaseModule],
+  imports: [DatabaseModule, AuthModule],
   controllers: [HotelController],
   providers: [HotelService, ...hotelProviders],
 })

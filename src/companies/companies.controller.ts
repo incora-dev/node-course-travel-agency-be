@@ -16,6 +16,7 @@ import {ICompany} from './interface/company.interface';
 import {AuthGuard} from '@nestjs/passport';
 import {AddressService} from '../address/address.service';
 import {responseConstants} from '../constants/responseConstants';
+import { TokenGuard } from '../auth/guards/token.guard';
 
 @ApiUseTags('companies')
 @Controller('companies')
@@ -26,7 +27,7 @@ export class CompaniesController {
     ) {}
 
     @Post()
-    @UseGuards(AuthGuard('jwt'))
+    @UseGuards(AuthGuard('jwt'), TokenGuard)
     @ApiBearerAuth()
     @ApiResponse({ status: 201, description: 'Success ```{ statusCode: 201, message: "Create was successful, companyId: id"}```' })
     @ApiResponse({ status: 400, description: 'Error Exception ```{ statusCode: 400, message: "Bad request" }```' })
@@ -69,7 +70,7 @@ export class CompaniesController {
     }
 
     @Delete(':id')
-    @UseGuards(AuthGuard('jwt'))
+    @UseGuards(AuthGuard('jwt'), TokenGuard)
     @ApiBearerAuth()
     @ApiImplicitParam({ name: 'id', type: Number })
     @ApiResponse({ status: 200, description: 'Success ```{ statusCode: 200, message: "Delete was successful"}```' })
@@ -87,7 +88,7 @@ export class CompaniesController {
     }
 
     @Put(':id')
-    @UseGuards(AuthGuard('jwt'))
+    @UseGuards(AuthGuard('jwt'), TokenGuard)
     @ApiBearerAuth()
     @ApiImplicitParam({ name: 'id', type: Number })
     @ApiResponse({ status: 200, description: 'Success ```{ statusCode: 200, message: "Update was successful"}```' })

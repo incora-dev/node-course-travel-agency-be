@@ -4,6 +4,7 @@ import { RatingDTO, CreateRatingDTO } from './dto/rating.dto';
 import { AuthGuard } from '@nestjs/passport';
 import { IRating } from './interface/rating.interface';
 import { ApiResponse, ApiUseTags, ApiBearerAuth } from '@nestjs/swagger';
+import { TokenGuard } from '../auth/guards/token.guard';
 
 @ApiUseTags('rating')
 @Controller('rating')
@@ -16,9 +17,9 @@ export class RatingController {
         return await this.ratingService.getAverage(hotelId);
     }
 
-    @UseGuards(AuthGuard('jwt'))
     @Post(':id')
     @ApiBearerAuth()
+    @UseGuards(AuthGuard('jwt'), TokenGuard)
     @ApiResponse({ status: 404, description: '```Not found```' })
     @ApiResponse({ status: 403, description: '```Forbidden``` You can\'t leave rating twice' })
     @ApiResponse({ status: 201, description: '```Created ```' })
