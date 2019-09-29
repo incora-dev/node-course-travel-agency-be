@@ -104,7 +104,7 @@ export class CompaniesController {
             '```' })
     async updateCompany(@Param() params, @Body() company: UpdateCompanyDto, @Request() req): Promise<Object> {
         await this.companiesService.checkCompanyByOwner(params.id, req.user.userId);
-        await this.companiesService.checkCompanyByEmail(company.contactEmail);
+        await this.companiesService.checkCompanyByEmail(company.contactEmail, params.id);
         await this.addressService.validateAddressCorrectness(company.address);
         if (await this.companiesService.updateCompany(params.id, company) ) {
             return {

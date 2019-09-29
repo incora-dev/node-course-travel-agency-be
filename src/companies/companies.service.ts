@@ -42,9 +42,13 @@ export class CompaniesService {
         if ( company.ownerId !== ownerId ) { throw new HttpException(responseConstants.forbidden, HttpStatus.FORBIDDEN); }
     }
 
-    async checkCompanyByEmail(contactEmail): Promise<void> {
+    async checkCompanyByEmail(contactEmail, companyId = null): Promise<void> {
         const company = await this.companyRepository.findOne({ where: {contactEmail}});
-        if ( company ) { throw new HttpException(responseConstants.companyAlreadyExist, HttpStatus.CONFLICT); }
+        if ( company ) {
+            if (company.id !== Number(companyId)) {
+                throw new HttpException(responseConstants.companyAlreadyExist, HttpStatus.CONFLICT);
+            }
+        }
     }
 
     async checkIfUserHaveCompany(userId): Promise<void> {
