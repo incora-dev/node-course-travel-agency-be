@@ -61,7 +61,11 @@ export class AuthController {
     @ApiResponse({ status: 403, description: '```Forbidden```' })
     @UseGuards(AuthGuard('jwt'), TokenGuard)
     getProfile(@Request() req) {
-        return req.user;
+        return {
+            statusCode: 200,
+            message: responseConstants.ok,
+            objectId: Number(req.user.userId),
+        };
     }
 
 }

@@ -88,7 +88,11 @@ export class UsersController {
     @ApiResponse({ status: 200, description: '```Ok```'})
     @ApiResponse({ status: 404, description: '```Not found```' })
     async getOneById(@Param('id') id: number): Promise<IUser> {
-        return await this.usersService.getOneByParams({ id });
+        const user = await this.usersService.getOneByParams({ id });
+        if (user) {
+            return user;
+        }
+        throw new HttpException('Not found', HttpStatus.NOT_FOUND);
     }
 
     @Get(':id/company')
