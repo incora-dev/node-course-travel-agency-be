@@ -2,18 +2,18 @@ import {IService} from '../../../services/interfaces/service.interface';
 
 export const ServicesSeeds: IService[] = [
     {
-        service: 'pool',
+        service: 'Sauna',
     },
     {
-        service: 'beach',
+        service: 'Basic',
     },
     {
-        service: 'gym',
+        service: 'Parties',
     },
     {
-        service: 'massage',
+        service: 'Swimming pool',
     },
     {
-        service: 'breakfast',
+        service: 'Beach',
     },
 ];
