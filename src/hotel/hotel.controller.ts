@@ -7,6 +7,7 @@ import { AuthGuard } from '@nestjs/passport';
 import { Company } from '../companies/company.entity';
 import { getRepository } from 'typeorm';
 import { responseConstants } from '../constants/responseConstants';
+import { TokenGuard } from '../auth/guards/token.guard';
 
 @ApiUseTags('hotel')
 @Controller('hotel')
@@ -29,7 +30,7 @@ export class HotelController {
     }
 
     @Post()
-    @UseGuards(AuthGuard('jwt'))
+    @UseGuards(AuthGuard('jwt'), TokenGuard)
     @ApiBearerAuth()
     @ApiResponse({ status: 201, description: '```Created ```' })
     @ApiResponse({ status: 403, description: '```Forbidden``` Hotel already exists' })
@@ -55,7 +56,7 @@ export class HotelController {
 
     @Put(':id')
     @ApiBearerAuth()
-    @UseGuards(AuthGuard('jwt'))
+    @UseGuards(AuthGuard('jwt'), TokenGuard)
     @ApiResponse({ status: 200, description: '```Ok``` Successfully updated' })
     @ApiResponse({ status: 404, description: '```Not found```' })
     @ApiResponse({ status: 401, description: '```Unauthorized```' })
@@ -77,7 +78,7 @@ export class HotelController {
     }
 
     @Delete(':id')
-    @UseGuards(AuthGuard('jwt'))
+    @UseGuards(AuthGuard('jwt'), TokenGuard)
     @ApiBearerAuth()
     @ApiResponse({ status: 200, description: '```Ok``` Successfully removed' })
     @ApiResponse({ status: 404, description: '```Not Found```' })

@@ -5,6 +5,7 @@ import {ITour} from './interface/tour.interface';
 import {CreateTourDto, UpdateTourDto} from './dto/tour.dto';
 import {AuthGuard} from '@nestjs/passport';
 import {responseConstants} from '../constants/responseConstants';
+import { TokenGuard } from '../auth/guards/token.guard';
 
 @ApiUseTags('tours')
 @Controller('tours')
@@ -20,7 +21,7 @@ export class ToursController {
     }
 
     @Post()
-    @UseGuards(AuthGuard('jwt'))
+    @UseGuards(AuthGuard('jwt'), TokenGuard)
     @ApiBearerAuth()
     @ApiResponse({ status: 201, description: 'Success ```{ statusCode: 201, message: "Create was successful, tourId: id"}```' })
     @ApiResponse({ status: 400, description: 'Error Exception ```' +
@@ -52,7 +53,7 @@ export class ToursController {
     }
 
     @Delete(':id')
-    @UseGuards(AuthGuard('jwt'))
+    @UseGuards(AuthGuard('jwt'), TokenGuard)
     @ApiBearerAuth()
     @ApiImplicitParam({ name: 'id', type: Number })
     @ApiResponse({ status: 200, description: 'Success ```{ statusCode: 200, message: "Delete was successful"}```' })
@@ -70,7 +71,7 @@ export class ToursController {
     }
 
     @Put(':id')
-    @UseGuards(AuthGuard('jwt'))
+    @UseGuards(AuthGuard('jwt'), TokenGuard)
     @ApiBearerAuth()
     @ApiImplicitParam({ name: 'id', type: Number })
     @ApiResponse({ status: 200, description: 'Success ```{ statusCode: 200, message: "Update was successful"}```' })

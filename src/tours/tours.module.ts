@@ -7,9 +7,10 @@ import {TourIsExistMiddleware} from '../middlewares/tour.isExist.middleware';
 import {serviceProviders} from '../services/service.providers';
 import {hotelProviders} from '../hotel/hotel.providers';
 import {roomProviders} from '../rooms/room.providers';
+import { AuthModule } from '../auth/auth.module';
 
 @Module({
-  imports: [DatabaseModule],
+  imports: [DatabaseModule, AuthModule],
   providers: [
       ToursService,
       ...tourProviders,
