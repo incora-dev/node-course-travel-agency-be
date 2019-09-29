@@ -31,7 +31,11 @@ export class ToursService {
     }
 
     async getAll(page: number, limit: number): Promise<Object> {
-        const tours = await this.tourRepository.findAndCount({skip: limit * page, take: limit});
+        const tours = await this.tourRepository.findAndCount({
+            skip: limit * page,
+            take: limit,
+            relations: ['rooms', 'services', 'hotel', 'hotel.address', 'hotel.images'],
+        });
         return {
             items: tours[0],
             itemsCount: tours[0].length,
