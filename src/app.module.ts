@@ -1,6 +1,4 @@
 import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
 import { UsersModule } from './users/users.module';
 import { AuthModule } from './auth/auth.module';
 import { HotelModule } from './hotel/hotel.module';
@@ -16,7 +14,5 @@ import { LocationModule } from './location/location.module';
 @Module({
   imports: [UsersModule, AuthModule, ToursModule, CompaniesModule, HotelModule, RoomsModule,
   ServicesModule, AddressModule, RatingModule, ImageModule, LocationModule],
-  controllers: [AppController],
-  providers: [AppService],
 })
 export class AppModule {}
