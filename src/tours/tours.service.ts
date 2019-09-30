@@ -1,5 +1,5 @@
 import {HttpException, HttpStatus, Inject, Injectable} from '@nestjs/common';
-import {Repository} from 'typeorm';
+import {Repository, getRepository} from 'typeorm';
 import {Tour} from './tour.entity';
 import {ITour} from './interface/tour.interface';
 import {CreateTourDto, UpdateTourDto} from './dto/tour.dto';
@@ -23,7 +23,7 @@ export class ToursService {
     ) {}
 
     async getOneByParams(params: object): Promise<ITour> {
-        return await this.tourRepository.findOne(params, {relations: ['rooms', 'services']});
+        return await this.tourRepository.findOne(params, { relations: ['rooms', 'services', 'hotel', 'hotel.address', 'hotel.images']});
     }
 
     async createTour(tour: CreateTourDto): Promise<ITour> {
@@ -84,5 +84,26 @@ export class ToursService {
         } else if (hotel.company.ownerId !== userId) {
             throw new HttpException( responseConstants.forbidden, HttpStatus.FORBIDDEN);
         }
+    }
+
+    async search(target: string): Promise<object[]> {
+        const result = [];
+        const data = await getRepository(Hotel)
+            .createQueryBuilder('hotel')
+            .select('hotel.id')
+            .where('hotel.name like :name', { name: '%' + target + '%' })
+            .getMany();
+        for (const key of data) {
+            const id = key.id;
+            const item = await getRepository(Tour)
+                .createQueryBuilder('tour')
+                .select('tour.id')
+                .where('tour.hotelId = :hotelId', { hotelId: Number(id) })
+                .getMany();
+            for (const value of item) {
+                result.push(await this.getOneByParams({id: Number(value.id)}));
+            }
+        }
+        return result;
     }
 }

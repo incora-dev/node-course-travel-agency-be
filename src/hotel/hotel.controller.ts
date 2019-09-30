@@ -2,12 +2,13 @@ import { Controller, Get, Param, Post, Body, Put, Delete, UseGuards, Request, Ht
 import { HotelService } from './hotel.service';
 import { IHotel } from './interfaces/hotel.interface';
 import { HotelDTO, UpdateHotelDTO } from './dto/hotel.dto';
-import { ApiResponse, ApiUseTags, ApiBearerAuth } from '@nestjs/swagger';
+import { ApiResponse, ApiUseTags, ApiBearerAuth, ApiImplicitParam } from '@nestjs/swagger';
 import { AuthGuard } from '@nestjs/passport';
 import { Company } from '../companies/company.entity';
 import { getRepository } from 'typeorm';
 import { responseConstants } from '../constants/responseConstants';
 import { TokenGuard } from '../auth/guards/token.guard';
+import { Hotel } from './hotel.entity';
 
 @ApiUseTags('hotel')
 @Controller('hotel')
@@ -29,12 +30,20 @@ export class HotelController {
         return await this.hotelService.getOneByParams({ id });
     }
 
+    @Get('find/search=:target')
+    @ApiImplicitParam({ name: 'target', type: String })
+    @ApiResponse({ status: 200, description: '```Ok ```' })
+    async searchFor(@Param('target') target: string) {
+        return this.hotelService.search(target);
+    }
+
     @Post()
     @UseGuards(AuthGuard('jwt'), TokenGuard)
     @ApiBearerAuth()
     @ApiResponse({ status: 201, description: '```Created ```' })
     @ApiResponse({ status: 403, description: '```Forbidden``` Hotel already exists' })
     @ApiResponse({ status: 404, description: '```Not found``` You should have a Company to create a hotel' })
+    @ApiResponse({ status: 400, description: '```Bad request ```' })
     async create(@Request() req, @Body() hotel: HotelDTO): Promise<Object> {
         const isUserHaveCompany = await getRepository(Company)
             .createQueryBuilder('company')

@@ -92,4 +92,11 @@ export class ToursController {
             };
         }
     }
+
+    @Get('find/search=:target')
+    @ApiImplicitParam({ name: 'target', type: String })
+    @ApiResponse({ status: 200, description: '```Ok ```' })
+    async searchFor(@Param('target') target: string) {
+        return this.toursService.search(target);
+    }
 }
