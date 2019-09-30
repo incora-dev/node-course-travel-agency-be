@@ -105,4 +105,19 @@ export class HotelService {
         }
         return true;
     }
+    async search(target: string): Promise<object[]> {
+        const result = [];
+        const data = await getRepository(Hotel)
+            .createQueryBuilder('hotel')
+            .select('hotel.id')
+            .where('hotel.name like :name', { name: '%' + target + '%' })
+            .getMany();
+        for (const key of data) {
+            const id = key.id;
+            const averageRating = await this.getAverage(id);
+            await this.updateRating(id, averageRating);
+            result.push(await this.getOneByParams({ id }));
+        }
+        return result;
+    }
 }
