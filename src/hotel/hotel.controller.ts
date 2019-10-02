@@ -8,7 +8,6 @@ import { Company } from '../companies/company.entity';
 import { getRepository } from 'typeorm';
 import { responseConstants } from '../constants/responseConstants';
 import { TokenGuard } from '../auth/guards/token.guard';
-import { Hotel } from './hotel.entity';
 
 @ApiUseTags('hotel')
 @Controller('hotel')
@@ -17,8 +16,8 @@ export class HotelController {
 
     @Get()
     @ApiResponse({ status: 200, description: '```Ok``` List of Hotels' })
-    async getAll(): Promise<IHotel[]> {
-        return await this.hotelService.getAll();
+    async getAll(@Query('page') page: number, @Query('limit') limit: number): Promise<Object> {
+        return await this.hotelService.search(page, limit, '');
     }
 
     @Get(':id')
@@ -34,7 +33,7 @@ export class HotelController {
     @ApiImplicitParam({ name: 'target', type: String })
     @ApiResponse({ status: 200, description: '```Ok ```' })
     async searchFor(@Param('target') target: string, @Query('page') page: number, @Query('limit') limit: number) {
-        return this.hotelService.search(target, page, limit);
+        return this.hotelService.search(page, limit, target);
     }
 
     @Post()

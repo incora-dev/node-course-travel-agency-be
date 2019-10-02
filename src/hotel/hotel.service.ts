@@ -15,10 +15,6 @@ export class HotelService {
         private readonly hotelRepository: Repository<Hotel>,
     ) {}
 
-    async getAll(): Promise<IHotel[]> {
-        return await this.hotelRepository.find();
-    }
-
     async getOneByParams(params: object): Promise<Hotel> {
         return await this.hotelRepository.findOne(params, {relations: ['images', 'company', 'address']});
     }
@@ -105,12 +101,12 @@ export class HotelService {
         }
         return true;
     }
-    async search(target: string, page: number, limit: number): Promise<Object> {
+    async search(page: number, limit: number, target: string): Promise<Object> {
         const hotels = await this.hotelRepository.findAndCount(
             {
                 where: { name: Like('%' + target + '%') },
                 take: limit,
-                skip: limit * page,
+                skip: limit * (page - 1),
                 relations: ['images', 'company', 'address'],
             },
         );
@@ -126,7 +122,7 @@ export class HotelService {
             itemsCount: hotels[0].length,
             total: hotels[1],
             page: Number(page),
-            maxPage: Math.ceil(hotels[1] / limit) - 1,
+            maxPage: Math.ceil(hotels[1] / limit),
         };
     }
 }
