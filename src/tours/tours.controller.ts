@@ -48,7 +48,7 @@ export class ToursController {
 
     @Get('')
     @ApiResponse({ status: 200, description: 'Success ```List of Tours```'})
-    getAll(@Query('page') page: number = 0, @Query('limit') limit: number = 10): Promise<Object> {
+    getAll(@Query('page') page: number = 1, @Query('limit') limit: number = 10): Promise<Object> {
         return this.toursService.getAll(page, limit);
     }
 
@@ -93,10 +93,10 @@ export class ToursController {
         }
     }
 
-    @Get('find/search=:target')
+    @Get('find/:target')
     @ApiImplicitParam({ name: 'target', type: String })
-    @ApiResponse({ status: 200, description: '```Ok ```' })
-    async searchFor(@Param('target') target: string) {
-        return this.toursService.search(target);
+    @ApiResponse({ status: 200, description: 'Success ```List of Tours```'})
+    async searchFor(@Param('target') target: string, @Query('page') page: number = 1, @Query('limit') limit: number = 10) {
+        return this.toursService.search(target, page, limit);
     }
 }

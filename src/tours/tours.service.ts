@@ -1,5 +1,5 @@
 import {HttpException, HttpStatus, Inject, Injectable} from '@nestjs/common';
-import {Repository, getRepository} from 'typeorm';
+import {Repository, getRepository, Like} from 'typeorm';
 import {Tour} from './tour.entity';
 import {ITour} from './interface/tour.interface';
 import {CreateTourDto, UpdateTourDto} from './dto/tour.dto';
@@ -86,24 +86,29 @@ export class ToursService {
         }
     }
 
-    async search(target: string): Promise<object[]> {
-        const result = [];
-        const data = await getRepository(Hotel)
-            .createQueryBuilder('hotel')
-            .select('hotel.id')
-            .where('hotel.name like :name', { name: '%' + target + '%' })
+    async search(target: string, page: number, limit: number): Promise<object> {
+        const tours = await getRepository(Tour)
+            .createQueryBuilder('tour')
+            .leftJoinAndSelect('tour.rooms', 'room')
+            .leftJoinAndSelect('tour.services', 'service')
+            .leftJoinAndSelect('tour.hotel', 'hotel')
+            .leftJoinAndSelect('hotel.address', 'address')
+            .leftJoinAndSelect('hotel.images', 'image')
+            .where('hotel.name like :name', { name: `%${target}%` })
+            .skip( limit * (page - 1))
+            .take(limit)
             .getMany();
-        for (const key of data) {
-            const id = key.id;
-            const item = await getRepository(Tour)
-                .createQueryBuilder('tour')
-                .select('tour.id')
-                .where('tour.hotelId = :hotelId', { hotelId: Number(id) })
-                .getMany();
-            for (const value of item) {
-                result.push(await this.getOneByParams({id: Number(value.id)}));
-            }
-        }
-        return result;
+        const allToursNumber = await getRepository(Tour)
+            .createQueryBuilder('tour')
+            .leftJoinAndSelect('tour.hotel', 'hotel')
+            .where('hotel.name like :name', { name: `%${target}%` })
+            .getCount();
+        return {
+            items: tours,
+            itemsCount: tours.length,
+            total: allToursNumber,
+            page: Number(page),
+            maxPage: Math.ceil(allToursNumber / limit),
+        };
     }
 }
