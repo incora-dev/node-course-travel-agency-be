@@ -101,28 +101,31 @@ export class HotelService {
         }
         return true;
     }
-    async search(page: number, limit: number, target: string): Promise<Object> {
-        const hotels = await this.hotelRepository.findAndCount(
-            {
-                where: { name: Like('%' + target + '%') },
-                take: limit,
-                skip: limit * (page - 1),
-                relations: ['images', 'company', 'address'],
-            },
-        );
+    async search(target: string, page: number, limit: number): Promise<Object> {
+        if ((page && limit) !== 0) {
+            const hotels = await this.hotelRepository.findAndCount(
+                {
+                    where: { name: Like('%' + target + '%') },
+                    take: limit,
+                    skip: limit * (page - 1),
+                    relations: ['images', 'company', 'address'],
+                },
+            );
 
-        for (const key of hotels[0]) {
-            const id = key.id;
-            const averageRating = await this.getAverage(id);
-            await this.updateRating(id, averageRating);
-            key.averageRating = averageRating;
+            for (const key of hotels[0]) {
+                const id = key.id;
+                const averageRating = await this.getAverage(id);
+                await this.updateRating(id, averageRating);
+                key.averageRating = averageRating;
+            }
+            return {
+                items: hotels[0],
+                itemsCount: hotels[0].length,
+                total: hotels[1],
+                page: Number(page),
+                maxPage: Math.ceil(hotels[1] / limit),
+            };
         }
-        return {
-            items: hotels[0],
-            itemsCount: hotels[0].length,
-            total: hotels[1],
-            page: Number(page),
-            maxPage: Math.ceil(hotels[1] / limit),
-        };
+        return await this.hotelRepository.find();
     }
 }
