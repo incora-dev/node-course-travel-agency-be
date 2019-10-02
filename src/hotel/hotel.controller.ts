@@ -1,4 +1,4 @@
-import { Controller, Get, Param, Post, Body, Put, Delete, UseGuards, Request, HttpException, HttpStatus } from '@nestjs/common';
+import { Controller, Get, Param, Post, Body, Put, Delete, UseGuards, Request, HttpException, HttpStatus, Query } from '@nestjs/common';
 import { HotelService } from './hotel.service';
 import { IHotel } from './interfaces/hotel.interface';
 import { HotelDTO, UpdateHotelDTO } from './dto/hotel.dto';
@@ -33,8 +33,8 @@ export class HotelController {
     @Get('find/search=:target')
     @ApiImplicitParam({ name: 'target', type: String })
     @ApiResponse({ status: 200, description: '```Ok ```' })
-    async searchFor(@Param('target') target: string) {
-        return this.hotelService.search(target);
+    async searchFor(@Param('target') target: string, @Query('page') page: number, @Query('limit') limit: number) {
+        return this.hotelService.search(target, page, limit);
     }
 
     @Post()

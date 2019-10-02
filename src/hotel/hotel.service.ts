@@ -1,5 +1,5 @@
 import { Injectable, Inject, HttpException, HttpStatus } from '@nestjs/common';
-import { Repository, getRepository, getConnection } from 'typeorm';
+import { Repository, getRepository, getConnection, Like } from 'typeorm';
 import { Hotel } from './hotel.entity';
 import { IHotel } from './interfaces/hotel.interface';
 import { HotelDTO, UpdateHotelDTO } from './dto/hotel.dto';
@@ -105,19 +105,28 @@ export class HotelService {
         }
         return true;
     }
-    async search(target: string): Promise<object[]> {
-        const result = [];
-        const data = await getRepository(Hotel)
-            .createQueryBuilder('hotel')
-            .select('hotel.id')
-            .where('hotel.name like :name', { name: '%' + target + '%' })
-            .getMany();
-        for (const key of data) {
+    async search(target: string, page: number, limit: number): Promise<Object> {
+        const hotels = await this.hotelRepository.findAndCount(
+            {
+                where: { name: Like('%' + target + '%') },
+                take: limit,
+                skip: limit * page,
+                relations: ['images', 'company', 'address'],
+            },
+        );
+
+        for (const key of hotels[0]) {
             const id = key.id;
             const averageRating = await this.getAverage(id);
             await this.updateRating(id, averageRating);
-            result.push(await this.getOneByParams({ id }));
+            key.averageRating = averageRating;
         }
-        return result;
+        return {
+            items: hotels[0],
+            itemsCount: hotels[0].length,
+            total: hotels[1],
+            page: Number(page),
+            maxPage: Math.ceil(hotels[1] / limit) - 1,
+        };
     }
 }
