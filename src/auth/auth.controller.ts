@@ -1,8 +1,8 @@
-import { Controller, Request, UseGuards, Body, Post, Get, UnauthorizedException } from '@nestjs/common';
+import { Controller, Request, UseGuards, Body, Post, Get, UnauthorizedException, Param } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { AuthService } from './auth.service';
 import { UserLogin, UserDTO } from '../users/dto/user.dto';
-import { ApiResponse, ApiBearerAuth, ApiUseTags } from '@nestjs/swagger';
+import { ApiResponse, ApiBearerAuth, ApiUseTags, ApiImplicitParam } from '@nestjs/swagger';
 import { ILogin } from './interfaces/auth.interface';
 import { TokenGuard } from './guards/token.guard';
 import { responseConstants } from '../constants/responseConstants';
@@ -37,12 +37,18 @@ export class AuthController {
     async logout(@Request() req) {
         const header = await this.authService.extractToken(req);
         await this.authService.logout(header);
-        // await req.logout();
-        // await res.redirect('/');
         return {
             statusCode: 200,
             message: responseConstants.logoutSuccess,
         };
+    }
+
+    @Post('refresh/:token')
+    @ApiImplicitParam({ name: 'token', type: String })
+    @ApiResponse({ status: 201, description: '```Created```' })
+    @ApiResponse({ status: 403, description: '```Forbidden```' })
+    async refreshToken(@Param('token') token) {
+        return await this.authService.refreshToken(token);
     }
 
     @Post('register')

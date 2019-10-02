@@ -1,5 +1,8 @@
 export const jwtConstants = {
-    secret: 'SecretKey',
-    expirationTime: '1h',
-    redisKeyExpirationTime: 3600,
+    accessTokenSecret: 'SecretKey',
+    refreshTokenSecret: 'RefreshSecretKey',
+    accessTokenExpTime: '3600s',
+    refreshTokenExpTime: '604800s', // 7days
+    redisAccessTokenExpTime: 3600,
+    redisRefreshTokenExpTime: 604800,
 };
