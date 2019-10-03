@@ -17,7 +17,7 @@ export class HotelController {
     @Get()
     @ApiResponse({ status: 200, description: '```Ok``` List of Hotels' })
     async getAll(@Query('page') page: number, @Query('limit') limit: number): Promise<Object> {
-        return await this.hotelService.search(page, limit, '');
+        return await this.hotelService.search('', page, limit);
     }
 
     @Get(':id')
@@ -33,7 +33,7 @@ export class HotelController {
     @ApiImplicitParam({ name: 'target', type: String })
     @ApiResponse({ status: 200, description: '```Ok ```' })
     async searchFor(@Param('target') target: string, @Query('page') page: number, @Query('limit') limit: number) {
-        return this.hotelService.search(page, limit, target);
+        return this.hotelService.search(target, page, limit);
     }
 
     @Post()
