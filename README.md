@@ -31,6 +31,15 @@ $ npm install
  ![enter image description here](https://lh3.googleusercontent.com/6Jff7wcE5i5dc0cs1WUFjknsTtxv-B4T9m9j3hmWUFmkPEqxJ9qJkJwypYH7_w-5LHakj-8xvL0=s600)
  - Enter password: **root**
 
+## Database seeding
+
+```bash
+
+# services
+$ npm run servicesSeed
+
+```
+
 ## Running the app
 
   

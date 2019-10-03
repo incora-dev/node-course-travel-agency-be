@@ -2,7 +2,7 @@ import {Injectable, Inject, HttpException} from '@nestjs/common';
 import {Repository} from 'typeorm';
 import {User} from './user.entity';
 import {IUser} from './interfaces/user.interface';
-import {UpdateUserDto, UserDTO} from './dto/user.dto';
+import {UserDTO, UpdateUserDTO, UpdatePasswordDTO} from './dto/user.dto';
 import * as bcrypt from 'bcrypt';
 
 @Injectable()
@@ -20,11 +20,14 @@ export class UsersService {
         return await this.userRepository.find();
     }
 
-    async updateUser(id: number, data: UpdateUserDto ): Promise<IUser> {
-        if (data.password) {
-            data.password = await bcrypt.hash(data.password, 10);
-        }
+    async updateUser(id: number, data: UpdateUserDTO ): Promise<IUser> {
         return await this.userRepository.save({ ...data, id: Number(id) });
+    }
+
+    async updatePassword(id: number, data: UpdatePasswordDTO): Promise<IUser> {
+    /*If user changes his password, we'll crypt it, before sending to DB */
+        data.password = await bcrypt.hash(data.password, 10);
+        return this.userRepository.save({ ...data, id: Number(id) });
     }
 
     async addToDB(user: UserDTO): Promise<IUser> {
