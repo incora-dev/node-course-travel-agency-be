@@ -102,7 +102,7 @@ export class HotelService {
         return true;
     }
     async search(target: string, page: number, limit: number): Promise<Object> {
-        if ((page && limit) !== 0) {
+        if (+(page && limit) !== 0) {
             const hotels = await this.hotelRepository.findAndCount(
                 {
                     where: { name: Like('%' + target + '%') },
