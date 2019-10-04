@@ -50,14 +50,15 @@ export class HotelService {
     }
     async update(id: number, hotel: UpdateHotelDTO): Promise<IHotel> {
         const hotelToUpdate = await this.getOneByParams({ id: Number(id) });
-        const location = await getRepository(Address)
-            .createQueryBuilder('address')
-            .select('address.locationId')
-            .where('address.id = :id', { id: hotelToUpdate.addressId })
-            .getRawOne();
-
-        hotel.address.id = hotelToUpdate.addressId;
-        hotel.address.location.id = location.address_locationId;
+        if (hotel.address) {
+            const location = await getRepository(Address)
+                .createQueryBuilder('address')
+                .select('address.locationId')
+                .where('address.id = :id', { id: hotelToUpdate.addressId })
+                .getRawOne();
+            hotel.address.id = hotelToUpdate.addressId;
+            if (hotel.address.location) { hotel.address.location.id = location.address_locationId; }
+        }
         return await this.hotelRepository.save({ ...hotel, id: Number(id) });
     }
 
